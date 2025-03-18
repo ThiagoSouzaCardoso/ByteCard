@@ -19,7 +19,7 @@ public class ClientePortImpl implements ClientePort {
     public Cliente register(Cliente cliente) {
 
        if(clienteRespository.findByEmail(cliente.email()).isPresent()){
-           throw new RuntimeException("");
+           throw new RuntimeException("Usuário já Cadastrado!");
        }
 
         var clienteEntity = new ClienteEntity();
@@ -27,6 +27,7 @@ public class ClientePortImpl implements ClientePort {
        clienteEntity.setNome(cliente.nome());
        clienteEntity.setEmail(cliente.email());
        clienteEntity.setSenha(cliente.senha());
+       clienteEntity.setRole(cliente.papel().toUpperCase());
 
         ClienteEntity clienteSaved = clienteRespository.save(clienteEntity);
 

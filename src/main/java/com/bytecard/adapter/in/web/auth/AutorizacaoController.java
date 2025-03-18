@@ -37,14 +37,14 @@ public class AutorizacaoController {
         this.clienteUseCase = clienteUseCase;
     }
 
-    @PostMapping
+    @PostMapping("/login")
     public String login(@RequestParam String username, @RequestParam String password) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         UserDetails user = userDetailsService.loadUserByUsername(username);
         return jwtService.generateToken(user);
     }
 
-    @PostMapping("/register")
+    @PostMapping("/registros")
     @ResponseStatus(HttpStatus.OK)
     public void registerUser(@RequestBody RegisterInput registerInput) {
 
@@ -53,6 +53,7 @@ public class AutorizacaoController {
                 .senha(registerInput.senha())
                 .cpf(registerInput.cpf())
                 .nome(registerInput.nome())
+                .papel(registerInput.papel())
                 .build();
 
         clienteUseCase.register(newUser);

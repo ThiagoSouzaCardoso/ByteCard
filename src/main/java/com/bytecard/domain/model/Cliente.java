@@ -7,6 +7,7 @@ public record Cliente(
      String nome,
      String cpf,
      String email,
-     String senha
+     String senha,
+     String papel
 ){
 }

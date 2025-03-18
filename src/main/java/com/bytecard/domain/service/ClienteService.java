@@ -31,8 +31,9 @@ public class ClienteService implements ClienteUseCase {
                 .email(cliente.email())
                 .nome(cliente.nome())
                 .senha(passwordEncoder.encode(cliente.senha()))
+                .papel(cliente.papel())
                 .build();
-
+        System.out.println(clienteWithPassEncoder.senha());
        return clientePort.register(clienteWithPassEncoder);
     }
 }

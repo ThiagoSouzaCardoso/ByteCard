@@ -33,6 +33,8 @@ public class ClienteEntity {
 
     private String senha;
 
+    private String role;
+
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<CartaoEntity> cartoes;
 
