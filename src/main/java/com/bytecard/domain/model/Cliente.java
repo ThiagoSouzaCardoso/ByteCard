@@ -1,4 +1,12 @@
 package com.bytecard.domain.model;
 
-public class Cliente {
+import lombok.Builder;
+
+@Builder
+public record Cliente(
+     String nome,
+     String cpf,
+     String email,
+     String senha
+){
 }
