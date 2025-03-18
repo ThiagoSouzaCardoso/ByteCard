@@ -46,7 +46,7 @@ public class AutorizacaoController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.OK)
-    public String registerUser(@RequestBody RegisterInput registerInput) {
+    public void registerUser(@RequestBody RegisterInput registerInput) {
 
         Cliente newUser = Cliente.builder()
                 .email(registerInput.email())
@@ -56,7 +56,5 @@ public class AutorizacaoController {
                 .build();
 
         clienteUseCase.register(newUser);
-
-        return "Usuário registrado com sucesso!";
     }
 }

@@ -23,9 +23,19 @@ public class ClientePortImpl implements ClientePort {
        }
 
         var clienteEntity = new ClienteEntity();
+       clienteEntity.setCpf(cliente.cpf());
+       clienteEntity.setNome(cliente.nome());
+       clienteEntity.setEmail(cliente.email());
+       clienteEntity.setSenha(cliente.senha());
+
         ClienteEntity clienteSaved = clienteRespository.save(clienteEntity);
 
-        return Cliente.builder().build();
+        return Cliente.builder()
+                .cpf(clienteSaved.getCpf())
+                .email(clienteSaved.getEmail())
+                .nome(clienteSaved.getNome())
+                .senha(clienteSaved.getSenha())
+                .build();
     }
 
 
