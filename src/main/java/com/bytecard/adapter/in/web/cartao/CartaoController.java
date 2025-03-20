@@ -4,7 +4,6 @@ import com.bytecard.adapter.in.web.cartao.inputs.CriarCartaoRequest;
 import com.bytecard.adapter.in.web.cartao.outputs.CartaoHateaosAssembler;
 import com.bytecard.adapter.in.web.cartao.outputs.CartaoResponse;
 import com.bytecard.domain.model.Cartao;
-import com.bytecard.domain.model.Cliente;
 import com.bytecard.domain.port.in.cartao.CartaoUseCase;
 import org.springframework.data.domain.Page;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -62,7 +61,6 @@ public class CartaoController implements CartaoControllerSwagger{
        return pagedResourcesAssembler.toModel(cartoes, cartaoHateaosAssembler);
 
    }
-
 
     @PatchMapping("/{id}/alterar-limite")
     @ResponseStatus(HttpStatus.OK)

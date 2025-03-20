@@ -2,6 +2,7 @@ package com.bytecard.adapter.out.persistence.cliente;
 
 import com.bytecard.adapter.out.persistence.cliente.entity.ClienteEntity;
 import com.bytecard.adapter.out.persistence.cliente.repository.ClienteRespository;
+import com.bytecard.domain.exception.UserAlreadyExistException;
 import com.bytecard.domain.model.Cliente;
 import com.bytecard.domain.port.out.cliente.ClientePort;
 import org.springframework.stereotype.Component;
@@ -19,7 +20,7 @@ public class ClientePortImpl implements ClientePort {
     public Cliente register(Cliente cliente) {
 
        if(clienteRespository.findByEmail(cliente.email()).isPresent()){
-           throw new RuntimeException("Usuário já Cadastrado!");
+           throw new UserAlreadyExistException("Usuário já Cadastrado!");
        }
 
         var clienteEntity = new ClienteEntity();
