@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Tag(name = "Cartões", description = "Gerenciamento de cartões de crédito")
 public interface CartaoControllerSwagger {
@@ -19,7 +20,7 @@ public interface CartaoControllerSwagger {
     CartaoResponse cadastrarCartao(@RequestBody CriarCartaoRequest dto);
 
     @Operation(summary = "Listar todos os cartões", description = "Retorna uma lista de cartões cadastrados.")
-    CollectionModel<CartaoResponse> listarCartoes();
+    List<CartaoResponse> listarCartoes();
 
     @Operation(summary = "Alterar limite do cartão", description = "Modifica o limite de crédito do cartão.")
     CartaoResponse alterarLimite(@PathVariable Long id, @RequestBody BigDecimal novoLimite);

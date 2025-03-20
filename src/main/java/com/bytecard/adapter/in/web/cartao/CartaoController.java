@@ -54,9 +54,11 @@ public class CartaoController implements CartaoControllerSwagger{
    @ResponseStatus(HttpStatus.OK)
    @PreAuthorize("hasRole('GERENTE')")
    @Override
-   public CollectionModel<CartaoResponse> listarCartoes() {
+   public List<CartaoResponse> listarCartoes() {
         List<Cartao> cartoes = cartaoUseCase.getAllCartoes();
-        return cartaoHateaosAssembler.toCollectionModel(cartoes);
+        return cartoes.stream()
+                .map(cartaoHateaosAssembler::toModel)
+                .toList();
    }
 
 
