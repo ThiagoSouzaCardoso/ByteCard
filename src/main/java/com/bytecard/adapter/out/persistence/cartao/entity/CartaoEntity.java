@@ -17,6 +17,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -28,6 +29,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class CartaoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,9 +47,6 @@ public class CartaoEntity {
 
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal limite;
-
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal saldo;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)

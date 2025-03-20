@@ -19,11 +19,6 @@ public class ClienteService implements ClienteUseCase {
     }
 
     @Override
-    public Cliente findClienteByEmail(String email) {
-        return null;
-    }
-
-    @Override
     public Cliente register(Cliente cliente) {
 
         var clienteWithPassEncoder = Cliente.builder()
@@ -33,7 +28,7 @@ public class ClienteService implements ClienteUseCase {
                 .senha(passwordEncoder.encode(cliente.senha()))
                 .papel(cliente.papel())
                 .build();
-        System.out.println(clienteWithPassEncoder.senha());
+
        return clientePort.register(clienteWithPassEncoder);
     }
 }

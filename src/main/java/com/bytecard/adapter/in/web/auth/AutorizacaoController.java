@@ -1,7 +1,6 @@
 package com.bytecard.adapter.in.web.auth;
 
 import com.bytecard.adapter.in.web.auth.inputs.RegisterInput;
-import com.bytecard.adapter.out.persistence.cliente.repository.ClienteRespository;
 import com.bytecard.config.JwtService;
 import com.bytecard.domain.model.Cliente;
 import com.bytecard.domain.port.in.cliente.ClienteUseCase;
