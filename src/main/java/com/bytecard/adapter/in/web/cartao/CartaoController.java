@@ -60,29 +60,34 @@ public class CartaoController {
 
     @PostMapping("/{id}/alterar-limite")
     @ResponseStatus(HttpStatus.OK)
-    public EntityModel<String> alterarLimite(@PathVariable Long id, @RequestBody BigDecimal novoLimite) {
-        return EntityModel.of("Limite do cartão " + id + " alterado para " + novoLimite);
-    }
-
-    @GetMapping("/{id}/ver-fatura")
-    @ResponseStatus(HttpStatus.OK)
-
-    public EntityModel<String> verFatura(@PathVariable Long id) {
-        return EntityModel.of("Fatura do cartão " + id);
+    public CartaoResponse alterarLimite(@PathVariable Long id, @RequestBody BigDecimal novoLimite) {
+        return cartaoHateaosAssembler.toModel(cartaoUseCase.alterarLimit(novoLimite,id));
     }
 
     @PostMapping("/{id}/ativar")
     @ResponseStatus(HttpStatus.OK)
-
-    public EntityModel<String> ativarCartao(@PathVariable Long id) {
-        return EntityModel.of("Cartão " + id + " ativado com sucesso!");
+    public CartaoResponse ativarCartao(@PathVariable Long id) {
+        return cartaoHateaosAssembler.toModel(cartaoUseCase.alterarStatusCartao(id,"ATIVO"));
     }
 
     @PostMapping("/{id}/cancelar")
     @ResponseStatus(HttpStatus.OK)
 
-    public EntityModel<String> cancelarCartao(@PathVariable Long id) {
-        return EntityModel.of("Cartão " + id + " cancelado!");
+    public CartaoResponse cancelarCartao(@PathVariable Long id) {
+        return cartaoHateaosAssembler.toModel(cartaoUseCase.alterarStatusCartao(id,"CANCELADO"));
+    }
+
+    @PostMapping("/{id}/bloquear")
+    @ResponseStatus(HttpStatus.OK)
+    public CartaoResponse bloquearCartao(@PathVariable Long id) {
+        return cartaoHateaosAssembler.toModel(cartaoUseCase.alterarStatusCartao(id,"BLOQUEADO"));
+    }
+
+
+    @GetMapping("/{id}/ver-fatura")
+    @ResponseStatus(HttpStatus.OK)
+    public EntityModel<String> verFatura(@PathVariable Long id) {
+        return EntityModel.of("Fatura do cartão " + id);
     }
 
 }

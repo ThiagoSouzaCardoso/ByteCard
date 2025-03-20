@@ -43,6 +43,12 @@ public class CartaoHateaosAssembler extends RepresentationModelAssemblerSupport<
         cartaoResponse.add(linkTo(methodOn(CartaoController.class)
                 .cancelarCartao(cartao.getId())).withRel("cancelar"));
 
+        cartaoResponse.add(linkTo(methodOn(CartaoController.class)
+                .bloquearCartao(cartao.getId())).withRel("bloquear"));
+
+        cartaoResponse.add(linkTo(methodOn(CartaoController.class)
+                .listarCartoes()).withRel("listar-cartoes"));
+
         return cartaoResponse;
     }
 
