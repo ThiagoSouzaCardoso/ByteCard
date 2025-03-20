@@ -23,7 +23,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/cartoes")
-public class CartaoController {
+public class CartaoController implements CartaoControllerSwagger{
 
     private final CartaoUseCase cartaoUseCase;
     private final CartaoHateaosAssembler cartaoHateaosAssembler;
@@ -37,6 +37,7 @@ public class CartaoController {
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('GERENTE')")
+    @Override
     public CartaoResponse cadastrarCartao(@RequestBody CriarCartaoRequest dto) {
 
         var cartao = Cartao.builder()
@@ -52,6 +53,7 @@ public class CartaoController {
    @GetMapping
    @ResponseStatus(HttpStatus.OK)
    @PreAuthorize("hasRole('GERENTE')")
+   @Override
    public CollectionModel<CartaoResponse> listarCartoes() {
         List<Cartao> cartoes = cartaoUseCase.getAllCartoes();
         return cartaoHateaosAssembler.toCollectionModel(cartoes);
@@ -61,6 +63,7 @@ public class CartaoController {
     @PostMapping("/{id}/alterar-limite")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('GERENTE')")
+    @Override
     public CartaoResponse alterarLimite(@PathVariable Long id, @RequestBody BigDecimal novoLimite) {
         return cartaoHateaosAssembler.toModel(cartaoUseCase.alterarLimit(novoLimite,id));
     }
@@ -68,6 +71,7 @@ public class CartaoController {
     @PostMapping("/{id}/ativar")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('GERENTE')")
+    @Override
     public CartaoResponse ativarCartao(@PathVariable Long id) {
         return cartaoHateaosAssembler.toModel(cartaoUseCase.alterarStatusCartao(id,"ATIVO"));
     }
@@ -75,6 +79,7 @@ public class CartaoController {
     @PostMapping("/{id}/cancelar")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('GERENTE')")
+    @Override
     public CartaoResponse cancelarCartao(@PathVariable Long id) {
         return cartaoHateaosAssembler.toModel(cartaoUseCase.alterarStatusCartao(id,"CANCELADO"));
     }
@@ -82,6 +87,7 @@ public class CartaoController {
     @PostMapping("/{id}/bloquear")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('GERENTE')")
+    @Override
     public CartaoResponse bloquearCartao(@PathVariable Long id) {
         return cartaoHateaosAssembler.toModel(cartaoUseCase.alterarStatusCartao(id,"BLOQUEADO"));
     }
@@ -89,6 +95,7 @@ public class CartaoController {
 
     @GetMapping("/{id}/ver-fatura")
     @ResponseStatus(HttpStatus.OK)
+    @Override
     public EntityModel<String> verFatura(@PathVariable Long id) {
         return EntityModel.of("Fatura do cartão " + id);
     }
