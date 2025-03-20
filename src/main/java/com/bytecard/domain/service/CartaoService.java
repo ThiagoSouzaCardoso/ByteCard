@@ -10,7 +10,10 @@ import com.bytecard.domain.model.Cartao;
 import com.bytecard.domain.model.Cliente;
 import com.bytecard.domain.port.in.cartao.CartaoUseCase;
 import com.bytecard.domain.port.out.cartao.CartaoPort;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -18,6 +21,7 @@ import java.security.SecureRandom;
 import java.time.YearMonth;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CartaoService implements CartaoUseCase {
@@ -54,38 +58,20 @@ public class CartaoService implements CartaoUseCase {
                  .build();
 
         var cartaoGerado = cartaoRepository.save(cartaoEntity);
-        return Cartao.builder()
-                .id(cartaoGerado.getId())
-                .numero(cartaoGerado.getNumero())
-                .limite(cartaoGerado.getLimite())
-                .cvv(cartaoGerado.getCvv())
-                .validade(cartaoGerado.getValidade())
-                .status(cartaoGerado.getStatus().name())
-                .cliente(Cliente.builder()
-                        .nome(cartaoGerado.getCliente().getNome())
-                        .email(cartaoGerado.getCliente().getEmail())
-                        .build())
-                .build();
+        return converterParaCartao(cartaoGerado);
     }
 
     @Override
-    public List<Cartao> getAllCartoes() {
-        return cartaoRepository.findAllOrdered().stream().map(cartaoEntity -> {
-            return Cartao.builder()
-                   .id(cartaoEntity.getId())
-                   .numero(cartaoEntity.getNumero())
-                   .limite(cartaoEntity.getLimite())
-                   .cvv(cartaoEntity.getCvv())
-                   .validade(cartaoEntity.getValidade())
-                   .status(cartaoEntity.getStatus().name())
-                   .cliente(Cliente.builder()
-                           .nome(cartaoEntity.getCliente().getNome())
-                           .email(cartaoEntity.getCliente().getEmail())
-                           .build())
-                   .build();
-                }
-        ).toList();
+    public Page<Cartao> getAllCartoes(Integer pageNo, Integer pageSize) {
 
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<CartaoEntity> result = cartaoRepository.findAllOrdered(pageable);
+
+        List<Cartao> cartoes = result.getContent().stream()
+                .map(this::converterParaCartao)
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(cartoes, pageable, result.getTotalElements());
     }
 
     @Override
@@ -100,18 +86,7 @@ public class CartaoService implements CartaoUseCase {
         cartaoEncontrado.setLimite(limite);
         CartaoEntity cartaoAtualizado = cartaoRepository.save(cartaoEncontrado);
 
-        return Cartao.builder()
-                .id(cartaoAtualizado.getId())
-                .numero(cartaoAtualizado.getNumero())
-                .limite(cartaoAtualizado.getLimite())
-                .cvv(cartaoAtualizado.getCvv())
-                .validade(cartaoAtualizado.getValidade())
-                .status(cartaoAtualizado.getStatus().name())
-                .cliente(Cliente.builder()
-                        .nome(cartaoAtualizado.getCliente().getNome())
-                        .email(cartaoAtualizado.getCliente().getEmail())
-                        .build())
-                .build();
+        return converterParaCartao(cartaoAtualizado);
     }
 
     @Override
@@ -127,18 +102,7 @@ public class CartaoService implements CartaoUseCase {
 
         CartaoEntity cartaoAtualizado = cartaoRepository.save(cartaoEncontrado);
 
-        return Cartao.builder()
-                .id(cartaoAtualizado.getId())
-                .numero(cartaoAtualizado.getNumero())
-                .limite(cartaoAtualizado.getLimite())
-                .cvv(cartaoAtualizado.getCvv())
-                .validade(cartaoAtualizado.getValidade())
-                .status(cartaoAtualizado.getStatus().name())
-                .cliente(Cliente.builder()
-                        .nome(cartaoAtualizado.getCliente().getNome())
-                        .email(cartaoAtualizado.getCliente().getEmail())
-                        .build())
-                .build();
+        return converterParaCartao(cartaoAtualizado);
     }
 
     private String gerarNumeroCartao() {
@@ -153,5 +117,21 @@ public class CartaoService implements CartaoUseCase {
         return String.format("%03d", random.nextInt(1000));
     }
 
+
+
+    private Cartao converterParaCartao(CartaoEntity cartaoEntity) {
+        return Cartao.builder()
+                .id(cartaoEntity.getId())
+                .numero(cartaoEntity.getNumero())
+                .limite(cartaoEntity.getLimite())
+                .cvv(cartaoEntity.getCvv())
+                .validade(cartaoEntity.getValidade())
+                .status(cartaoEntity.getStatus().name())
+                .cliente(Cliente.builder()
+                        .nome(cartaoEntity.getCliente().getNome())
+                        .email(cartaoEntity.getCliente().getEmail())
+                        .build())
+                .build();
+    }
 
 }

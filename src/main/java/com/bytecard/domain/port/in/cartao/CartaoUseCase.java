@@ -1,15 +1,15 @@
 package com.bytecard.domain.port.in.cartao;
 
 import com.bytecard.domain.model.Cartao;
+import org.springframework.data.domain.Page;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 public interface CartaoUseCase {
 
     Cartao register(Cartao cartao);
 
-    List<Cartao> getAllCartoes();
+    Page<Cartao> getAllCartoes(Integer pageNo, Integer pageSize);
 
     Cartao alterarLimit(BigDecimal limite, Long id);
 

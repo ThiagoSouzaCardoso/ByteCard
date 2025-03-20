@@ -1,7 +1,7 @@
 package com.bytecard.domain.service;
 
 import com.bytecard.adapter.out.persistence.cartao.repository.CartaoRepository;
-import com.bytecard.domain.port.in.cartao.CartaoUseCase;
+import com.bytecard.domain.model.Transacao;
 import com.bytecard.domain.port.in.transacao.TransacaoUseCase;
 import org.springframework.stereotype.Service;
 
@@ -15,4 +15,11 @@ public class TransacaoService implements TransacaoUseCase {
     }
 
 
+    @Override
+    public Transacao registrarCompra(Transacao dto) {
+
+
+
+        return null;
+    }
 }

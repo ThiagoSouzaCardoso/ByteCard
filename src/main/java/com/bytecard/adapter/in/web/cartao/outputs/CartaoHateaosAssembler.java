@@ -47,7 +47,7 @@ public class CartaoHateaosAssembler extends RepresentationModelAssemblerSupport<
                 .bloquearCartao(cartao.getId())).withRel("bloquear"));
 
         cartaoResponse.add(linkTo(methodOn(CartaoController.class)
-                .listarCartoes()).withRel("listar-cartoes"));
+                .listarCartoes(0,10)).withRel("listar-cartoes"));
 
         return cartaoResponse;
     }

@@ -4,13 +4,13 @@ import com.bytecard.adapter.in.web.cartao.inputs.CriarCartaoRequest;
 import com.bytecard.adapter.in.web.cartao.outputs.CartaoResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @Tag(name = "Cartões", description = "Gerenciamento de cartões de crédito")
 public interface CartaoControllerSwagger {
@@ -20,7 +20,8 @@ public interface CartaoControllerSwagger {
     CartaoResponse cadastrarCartao(@RequestBody CriarCartaoRequest dto);
 
     @Operation(summary = "Listar todos os cartões", description = "Retorna uma lista de cartões cadastrados.")
-    List<CartaoResponse> listarCartoes();
+    PagedModel<CartaoResponse> listarCartoes(@RequestParam(defaultValue = "0") Integer pageNo,
+                                             @RequestParam(defaultValue = "10") Integer pageSize);
 
     @Operation(summary = "Alterar limite do cartão", description = "Modifica o limite de crédito do cartão.")
     CartaoResponse alterarLimite(@PathVariable Long id, @RequestBody BigDecimal novoLimite);
