@@ -26,6 +26,8 @@ CREATE TABLE transacao_entity (
                                   data_hora  TIMESTAMP(6) WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
                                   descricao  VARCHAR(255) NOT NULL,
                                   valor      DECIMAL(10,2) NOT NULL CHECK (valor > 0),
+                                  categoria VARCHAR(50) NOT NULL CHECK (categoria IN ('ALIMENTACAO', 'SAUDE', 'LAZER', 'CASA', 'TRANSPORTE', 'EDUCACAO', 'OUTROS')),
+                                  estabelecimento VARCHAR(255) NOT NULL,
                                   cartao_id  BIGINT NOT NULL,
                                   FOREIGN KEY (cartao_id) REFERENCES cartao_entity(id) ON DELETE CASCADE
 );
