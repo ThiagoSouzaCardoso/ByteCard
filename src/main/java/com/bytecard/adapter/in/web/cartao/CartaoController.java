@@ -13,6 +13,7 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,19 +42,15 @@ public class CartaoController implements CartaoControllerSwagger{
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('GERENTE')")
     @Override
-    public CartaoResponse cadastrarCartao(@RequestBody CriarCartaoRequest dto) {
+    public CartaoResponse cadastrarCartao(@RequestBody CriarCartaoRequest request) {
 
-        var cartao = Cartao.builder()
-                .cliente(Cliente.builder()
-                        .email(dto.email())
-                        .build())
-                        .limite(dto.limite()).build();
+        var cartao = request.toModel();
 
         var cartaoCriado = cartaoUseCase.register(cartao);
         return cartaoHateaosAssembler.toModel(cartaoCriado);
     }
 
-   @GetMapping
+    @GetMapping
    @ResponseStatus(HttpStatus.OK)
    @PreAuthorize("hasRole('GERENTE')")
    @Override
@@ -67,7 +64,7 @@ public class CartaoController implements CartaoControllerSwagger{
    }
 
 
-    @PostMapping("/{id}/alterar-limite")
+    @PatchMapping("/{id}/alterar-limite")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('GERENTE')")
     @Override
@@ -75,7 +72,7 @@ public class CartaoController implements CartaoControllerSwagger{
         return cartaoHateaosAssembler.toModel(cartaoUseCase.alterarLimit(novoLimite,id));
     }
 
-    @PostMapping("/{id}/ativar")
+    @PatchMapping("/{id}/ativar")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('GERENTE')")
     @Override
@@ -83,7 +80,7 @@ public class CartaoController implements CartaoControllerSwagger{
         return cartaoHateaosAssembler.toModel(cartaoUseCase.alterarStatusCartao(id,"ATIVO"));
     }
 
-    @PostMapping("/{id}/cancelar")
+    @PatchMapping("/{id}/cancelar")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('GERENTE')")
     @Override
@@ -91,14 +88,13 @@ public class CartaoController implements CartaoControllerSwagger{
         return cartaoHateaosAssembler.toModel(cartaoUseCase.alterarStatusCartao(id,"CANCELADO"));
     }
 
-    @PostMapping("/{id}/bloquear")
+    @PatchMapping("/{id}/bloquear")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('GERENTE')")
     @Override
     public CartaoResponse bloquearCartao(@PathVariable Long id) {
         return cartaoHateaosAssembler.toModel(cartaoUseCase.alterarStatusCartao(id,"BLOQUEADO"));
     }
-
 
     @GetMapping("/{id}/ver-fatura")
     @ResponseStatus(HttpStatus.OK)
