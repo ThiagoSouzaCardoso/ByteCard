@@ -1,15 +1,15 @@
 package com.bytecard.domain.service;
 
 import com.bytecard.adapter.out.persistence.cartao.entity.CartaoEntity;
-import com.bytecard.adapter.out.persistence.cartao.entity.StatusCartao;
+import com.bytecard.domain.model.StatusCartao;
 import com.bytecard.adapter.out.persistence.cartao.repository.CartaoRepository;
-import com.bytecard.adapter.out.persistence.cliente.repository.ClienteRespository;
 import com.bytecard.domain.exception.CartaoNotFoundException;
 import com.bytecard.domain.exception.ClienteNotFoundException;
 import com.bytecard.domain.model.Cartao;
 import com.bytecard.domain.model.Cliente;
 import com.bytecard.domain.port.in.cartao.CartaoUseCase;
-import com.bytecard.domain.port.out.cartao.CartaoPort;
+import com.bytecard.domain.port.out.cartao.RegistraCartaoPort;
+import com.bytecard.domain.port.out.cliente.BuscaClientePort;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -27,38 +27,37 @@ import java.util.stream.Collectors;
 public class CartaoService implements CartaoUseCase {
 
     private final CartaoRepository cartaoRepository;
-    private final ClienteRespository clienteRespository;
-    private final CartaoPort cartaoPort;
+    private final BuscaClientePort buscaCartaoPort;
+    private final RegistraCartaoPort registraCartaoPort;
 
     private static final SecureRandom random = new SecureRandom();
 
 
-    public CartaoService(CartaoRepository cartaoRepository, ClienteRespository clienteRespository, CartaoPort cartaoPort) {
+    public CartaoService(CartaoRepository cartaoRepository, BuscaClientePort buscaCartaoPort, RegistraCartaoPort registraCartaoPort) {
         this.cartaoRepository = cartaoRepository;
-        this.clienteRespository = clienteRespository;
-        this.cartaoPort = cartaoPort;
+        this.buscaCartaoPort = buscaCartaoPort;
+        this.registraCartaoPort = registraCartaoPort;
     }
 
 
     @Override
     public Cartao register(Cartao cartao) {
 
-        var cliente = clienteRespository.findByEmail(cartao.getCliente().email());
+        var cliente = buscaCartaoPort.findClienteByEmail(cartao.getCliente().email());
         if(cliente.isEmpty()){
             throw new ClienteNotFoundException("Usuário não encontrado");
         }
 
-         var cartaoEntity = CartaoEntity.builder()
-                 .cvv(gerarCVV())
-                 .numero(gerarNumeroCartao())
-                 .validade(YearMonth.now().plusYears(4).plusMonths(6))
-                 .status(StatusCartao.ATIVO)
-                 .limite(cartao.getLimite())
-                 .cliente(cliente.get())
-                 .build();
+        var cartaoSalvar = Cartao.builder()
+                .cvv(gerarCVV())
+                .numero(gerarNumeroCartao())
+                .validade(YearMonth.now().plusYears(4).plusMonths(6))
+                .status(StatusCartao.ATIVO)
+                .limite(cartao.getLimite())
+                .cliente(cliente.get())
+                .build();
 
-        var cartaoGerado = cartaoRepository.save(cartaoEntity);
-        return converterParaCartao(cartaoGerado);
+        return registraCartaoPort.save(cartaoSalvar);
     }
 
     @Override
@@ -126,7 +125,7 @@ public class CartaoService implements CartaoUseCase {
                 .limite(cartaoEntity.getLimite())
                 .cvv(cartaoEntity.getCvv())
                 .validade(cartaoEntity.getValidade())
-                .status(cartaoEntity.getStatus().name())
+                .status(cartaoEntity.getStatus())
                 .cliente(Cliente.builder()
                         .nome(cartaoEntity.getCliente().getNome())
                         .email(cartaoEntity.getCliente().getEmail())

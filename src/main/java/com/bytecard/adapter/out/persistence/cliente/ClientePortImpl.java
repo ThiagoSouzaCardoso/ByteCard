@@ -4,11 +4,14 @@ import com.bytecard.adapter.out.persistence.cliente.entity.ClienteEntity;
 import com.bytecard.adapter.out.persistence.cliente.repository.ClienteRespository;
 import com.bytecard.domain.exception.UserAlreadyExistException;
 import com.bytecard.domain.model.Cliente;
-import com.bytecard.domain.port.out.cliente.ClientePort;
+import com.bytecard.domain.port.out.cliente.BuscaClientePort;
+import com.bytecard.domain.port.out.cliente.RegistraClientePort;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
-public class ClientePortImpl implements ClientePort {
+public class ClientePortImpl implements RegistraClientePort, BuscaClientePort {
 
     private final ClienteRespository clienteRespository;
 
@@ -41,5 +44,15 @@ public class ClientePortImpl implements ClientePort {
     }
 
 
-
+    @Override
+    public Optional<Cliente> findClienteByEmail(String email) {
+        return clienteRespository.findByEmail(email)
+                .map(clienteEntity -> Cliente.builder()
+                        .cpf(clienteEntity.getCpf())
+                        .email(clienteEntity.getEmail())
+                        .nome(clienteEntity.getNome())
+                        .senha(clienteEntity.getSenha())
+                        .build()
+                );
+    }
 }

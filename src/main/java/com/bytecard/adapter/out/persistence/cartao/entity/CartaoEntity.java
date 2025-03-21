@@ -3,6 +3,7 @@ package com.bytecard.adapter.out.persistence.cartao.entity;
 import com.bytecard.adapter.out.persistence.cliente.entity.ClienteEntity;
 import com.bytecard.adapter.out.persistence.converter.YearMonthConverter;
 import com.bytecard.adapter.out.persistence.transacao.entity.TransacaoEntity;
+import com.bytecard.domain.model.StatusCartao;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
@@ -50,7 +51,7 @@ public class CartaoEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    private StatusCartao  status;
+    private StatusCartao status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cliente_id")

@@ -19,5 +19,5 @@ public class Cartao {
     private YearMonth validade;
     private String cvv;
     private BigDecimal limite;
-    private String status;
+    private StatusCartao status;
 }

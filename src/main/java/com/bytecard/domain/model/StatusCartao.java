@@ -1,4 +1,4 @@
-package com.bytecard.adapter.out.persistence.cartao.entity;
+package com.bytecard.domain.model;
 
 public enum StatusCartao {
     ATIVO,

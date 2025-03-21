@@ -2,19 +2,19 @@ package com.bytecard.domain.service;
 
 import com.bytecard.domain.model.Cliente;
 import com.bytecard.domain.port.in.cliente.ClienteUseCase;
-import com.bytecard.domain.port.out.cliente.ClientePort;
+import com.bytecard.domain.port.out.cliente.RegistraClientePort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ClienteService implements ClienteUseCase {
 
-    private final ClientePort clientePort;
+    private final RegistraClientePort registraClientePort;
    private final PasswordEncoder passwordEncoder;
 
 
-    public ClienteService(ClientePort clientePort, PasswordEncoder passwordEncoder) {
-        this.clientePort = clientePort;
+    public ClienteService(RegistraClientePort registraClientePort, PasswordEncoder passwordEncoder) {
+        this.registraClientePort = registraClientePort;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -29,6 +29,6 @@ public class ClienteService implements ClienteUseCase {
                 .papel(cliente.papel())
                 .build();
 
-       return clientePort.register(clienteWithPassEncoder);
+       return registraClientePort.register(clienteWithPassEncoder);
     }
 }
