@@ -1,7 +1,6 @@
 package com.bytecard.adapter.in.web.cartao.outputs;
 
 
-import com.bytecard.adapter.out.persistence.cartao.entity.CartaoEntity;
 import com.bytecard.domain.model.StatusCartao;
 import lombok.Builder;
 import lombok.Getter;

@@ -4,11 +4,11 @@ import com.bytecard.adapter.in.web.cartao.CartaoController;
 import com.bytecard.domain.model.Cartao;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
 
 import java.time.YearMonth;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component
 public class CartaoHateaosAssembler extends RepresentationModelAssemblerSupport<Cartao,CartaoResponse > {

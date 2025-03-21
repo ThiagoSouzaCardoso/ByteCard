@@ -4,6 +4,7 @@ import com.bytecard.adapter.in.web.cartao.inputs.CriarCartaoRequest;
 import com.bytecard.adapter.in.web.cartao.outputs.CartaoHateaosAssembler;
 import com.bytecard.adapter.in.web.cartao.outputs.CartaoResponse;
 import com.bytecard.domain.model.Cartao;
+import com.bytecard.domain.model.StatusCartao;
 import com.bytecard.domain.port.in.cartao.CartaoUseCase;
 import org.springframework.data.domain.Page;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -75,7 +76,7 @@ public class CartaoController implements CartaoControllerSwagger{
     @PreAuthorize("hasRole('GERENTE')")
     @Override
     public CartaoResponse ativarCartao(@PathVariable Long id) {
-        return cartaoHateaosAssembler.toModel(cartaoUseCase.alterarStatusCartao(id,"ATIVO"));
+        return cartaoHateaosAssembler.toModel(cartaoUseCase.alterarStatusCartao(id, StatusCartao.ATIVO));
     }
 
     @PatchMapping("/{id}/cancelar")
@@ -83,7 +84,7 @@ public class CartaoController implements CartaoControllerSwagger{
     @PreAuthorize("hasRole('GERENTE')")
     @Override
     public CartaoResponse cancelarCartao(@PathVariable Long id) {
-        return cartaoHateaosAssembler.toModel(cartaoUseCase.alterarStatusCartao(id,"CANCELADO"));
+        return cartaoHateaosAssembler.toModel(cartaoUseCase.alterarStatusCartao(id,StatusCartao.CANCELADO));
     }
 
     @PatchMapping("/{id}/bloquear")
@@ -91,10 +92,10 @@ public class CartaoController implements CartaoControllerSwagger{
     @PreAuthorize("hasRole('GERENTE')")
     @Override
     public CartaoResponse bloquearCartao(@PathVariable Long id) {
-        return cartaoHateaosAssembler.toModel(cartaoUseCase.alterarStatusCartao(id,"BLOQUEADO"));
+        return cartaoHateaosAssembler.toModel(cartaoUseCase.alterarStatusCartao(id,StatusCartao.BLOQUEADO));
     }
 
-    @GetMapping("/{id}/ver-fatura")
+    @GetMapping("/{id}/faturas")
     @ResponseStatus(HttpStatus.OK)
     @Override
     public EntityModel<String> verFatura(@PathVariable Long id) {

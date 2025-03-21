@@ -2,7 +2,6 @@ package com.bytecard.adapter.in.web.transacao;
 
 import com.bytecard.adapter.in.web.transacao.inputs.CriarCompraRequest;
 import com.bytecard.adapter.in.web.transacao.outputs.TransacaoResponse;
-import com.bytecard.adapter.out.persistence.transacao.entity.TransacaoEntity;
 import com.bytecard.domain.model.Transacao;
 import com.bytecard.domain.service.TransacaoService;
 import io.swagger.v3.oas.annotations.Operation;

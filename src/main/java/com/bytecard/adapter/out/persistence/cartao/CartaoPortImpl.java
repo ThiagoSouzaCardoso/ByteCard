@@ -9,8 +9,15 @@ import com.bytecard.domain.model.Cliente;
 import com.bytecard.domain.port.out.cartao.BuscaCartaoPort;
 import com.bytecard.domain.port.out.cartao.RegistraCartaoPort;
 import lombok.AllArgsConstructor;
-import org.apache.catalina.connector.ClientAbortException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Component
@@ -40,6 +47,26 @@ public class CartaoPortImpl implements BuscaCartaoPort, RegistraCartaoPort {
 
         return converterParaCartao(cartaoRegistrado);
     }
+
+    @Override
+    public Page<Cartao> findAllOrdenadosPaginados(Integer numeroPagina, Integer tamanhoPagina) {
+
+        Pageable pageable = PageRequest.of(numeroPagina, tamanhoPagina);
+        Page<CartaoEntity> result = cartaoRepository.findAllOrdered(pageable);
+
+        List<Cartao> cartoes = result.getContent().stream()
+                .map(this::converterParaCartao)
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(cartoes, pageable, result.getTotalElements());
+    }
+
+    @Override
+    public Optional<Cartao> findById(Long id) {
+        Optional<CartaoEntity> cartao = cartaoRepository.findById(id);
+        return cartao.map(this::converterParaCartao);
+    }
+
 
     private Cartao converterParaCartao(CartaoEntity cartaoEntity) {
         return Cartao.builder()

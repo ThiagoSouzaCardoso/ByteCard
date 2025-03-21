@@ -1,6 +1,7 @@
 package com.bytecard.domain.port.in.cartao;
 
 import com.bytecard.domain.model.Cartao;
+import com.bytecard.domain.model.StatusCartao;
 import org.springframework.data.domain.Page;
 
 import java.math.BigDecimal;
@@ -13,7 +14,7 @@ public interface CartaoUseCase {
 
     Cartao alterarLimit(BigDecimal limite, Long id);
 
-    Cartao alterarStatusCartao(Long id, String status);
+    Cartao alterarStatusCartao(Long id, StatusCartao status);
 
 
     }
