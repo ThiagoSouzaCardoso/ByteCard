@@ -1,10 +1,10 @@
 package com.bytecard.adapter.in.web.transacao;
 
 import com.bytecard.adapter.in.web.transacao.inputs.CriarCompraRequest;
+import com.bytecard.adapter.in.web.transacao.outputs.TransacaoHateaosAssembler;
 import com.bytecard.adapter.in.web.transacao.outputs.TransacaoResponse;
 import com.bytecard.domain.model.Transacao;
 import com.bytecard.domain.service.TransacaoService;
-import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,24 +14,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/compras")
-public class TransacaoController {
+public class TransacaoController implements TransacaoControllerSwagger {
 
-
+    private final TransacaoHateaosAssembler transacaoHateaosAssembler;
     private final TransacaoService transacaoService;
 
-    public TransacaoController(TransacaoService transacaoService) {
+    public TransacaoController(TransacaoHateaosAssembler transacaoHateaosAssembler, TransacaoService transacaoService) {
+        this.transacaoHateaosAssembler = transacaoHateaosAssembler;
         this.transacaoService = transacaoService;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @Operation(summary = "Registrar uma nova compra", description = "Registra uma compra vinculada a um cartão escolhido.")
-    public Transacao registrarCompra(@RequestBody CriarCompraRequest dto) {
+    public TransacaoResponse registrarCompra(@RequestBody CriarCompraRequest dto) {
         Transacao transacaoCriada = transacaoService.registrarCompra(dto.toModel());
-
-
-
-        return transacaoCriada;
+        return transacaoHateaosAssembler.toModel(transacaoCriada);
     }
 
 
