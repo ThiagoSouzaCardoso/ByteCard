@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CartaoRepository extends JpaRepository<CartaoEntity, Long> {
@@ -17,4 +18,8 @@ public interface CartaoRepository extends JpaRepository<CartaoEntity, Long> {
 
     @Query("SELECT c FROM CartaoEntity c JOIN c.cliente cli ORDER BY cli.nome ASC, c.numero ASC")
     Page<CartaoEntity> findAllOrdered(Pageable pageable);
+
+    Optional<CartaoEntity> findByNumero(String numero);
+
+
 }

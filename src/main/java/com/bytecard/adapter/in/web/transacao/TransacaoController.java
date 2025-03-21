@@ -26,9 +26,12 @@ public class TransacaoController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Registrar uma nova compra", description = "Registra uma compra vinculada a um cartão escolhido.")
-    public TransacaoResponse registrarCompra(@RequestBody CriarCompraRequest dto) {
-        Transacao transacaoCriada = transacaoService.registrarCompra(new Transacao());
-        return new TransacaoResponse();
+    public Transacao registrarCompra(@RequestBody CriarCompraRequest dto) {
+        Transacao transacaoCriada = transacaoService.registrarCompra(dto.toModel());
+
+
+
+        return transacaoCriada;
     }
 
 
