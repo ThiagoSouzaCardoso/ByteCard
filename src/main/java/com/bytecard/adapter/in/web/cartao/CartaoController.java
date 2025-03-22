@@ -6,6 +6,7 @@ import com.bytecard.adapter.in.web.cartao.outputs.CartaoResponse;
 import com.bytecard.domain.model.Cartao;
 import com.bytecard.domain.model.StatusCartao;
 import com.bytecard.domain.port.in.cartao.CartaoUseCase;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
@@ -42,7 +43,7 @@ public class CartaoController implements CartaoControllerSwagger{
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('GERENTE')")
     @Override
-    public CartaoResponse cadastrarCartao(@RequestBody CriarCartaoRequest request) {
+    public CartaoResponse cadastrarCartao(@Valid @RequestBody CriarCartaoRequest request) {
 
         var cartao = request.toModel();
 

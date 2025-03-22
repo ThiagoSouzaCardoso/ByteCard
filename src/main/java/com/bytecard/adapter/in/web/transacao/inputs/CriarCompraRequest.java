@@ -6,6 +6,7 @@ import com.bytecard.domain.model.Transacao;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
 import java.math.BigDecimal;
@@ -13,11 +14,19 @@ import java.math.BigDecimal;
 @Getter
 public class CriarCompraRequest {
 
-    @NotNull private Long cartaoId;
-    @NotBlank private String cartaoNumero;
-    @NotNull @DecimalMin("0.01") private BigDecimal valor;
-    @NotNull  private CategoriaTransacao categoria;
-    @NotBlank private String estabelecimento;
+    @NotBlank(message = "Numero do Cartão é obrigatório")
+    private String cartaoNumero;
+
+    @NotNull(message = "Valor é obrigatório")
+    @DecimalMin(value = "0.01", message = "Valor deve ser positivo")
+    private BigDecimal valor;
+
+    @NotNull(message = "Categoria é obrigatória")
+    private CategoriaTransacao categoria;
+
+    @NotBlank(message = "Estabelecimento é obrigatório")
+    @Size(min = 5, message = "Estabelecimento deve ter no mínimo 5 caracteres")
+    private String estabelecimento;
 
 
     public Transacao toModel(){
@@ -27,7 +36,6 @@ public class CriarCompraRequest {
                 .categoria(this.categoria)
                 .estabelecimento(this.estabelecimento)
                 .valor(this.valor)
-                .id(this.cartaoId)
                 .build();
 
     }

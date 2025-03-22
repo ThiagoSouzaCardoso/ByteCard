@@ -1,10 +1,14 @@
 package com.bytecard.adapter.in.web.transacao;
 
 import com.bytecard.adapter.in.web.transacao.inputs.CriarCompraRequest;
+import com.bytecard.adapter.in.web.transacao.inputs.RelatorioGastosRequest;
+import com.bytecard.adapter.in.web.transacao.outputs.RelatorioGastosResponse;
 import com.bytecard.adapter.in.web.transacao.outputs.TransacaoHateaosAssembler;
 import com.bytecard.adapter.in.web.transacao.outputs.TransacaoResponse;
 import com.bytecard.domain.model.Transacao;
 import com.bytecard.domain.service.TransacaoService;
+import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,9 +30,15 @@ public class TransacaoController implements TransacaoControllerSwagger {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public TransacaoResponse registrarCompra(@RequestBody CriarCompraRequest dto) {
+    public TransacaoResponse registrarCompra(@Valid @RequestBody CriarCompraRequest dto) {
         Transacao transacaoCriada = transacaoService.registrarCompra(dto.toModel());
         return transacaoHateaosAssembler.toModel(transacaoCriada);
+    }
+
+    @PostMapping("/relatorio")
+    @Operation(summary = "Relatório de gastos por categoria", description = "Retorna a soma dos gastos por categoria em um mês específico para um cartão.")
+    public RelatorioGastosResponse relatorioDeGastos(@Valid @RequestBody RelatorioGastosRequest request) {
+        return transacaoService.gerarRelatorioPorCategoria(request);
     }
 
 
