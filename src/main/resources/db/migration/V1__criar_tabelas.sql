@@ -40,3 +40,18 @@ CREATE UNIQUE INDEX unq_cliente_cpf ON cliente_entity (cpf);
 
 --Index para a tabela CARTÃO
 CREATE UNIQUE INDEX unq_cartao_numero ON cartao_entity (numero);
+
+
+
+--- View para relatorio de gasto por cartão, mes e ano
+
+CREATE OR REPLACE VIEW vw_gasto_categoria AS
+SELECT
+    t.cartao_id,
+    EXTRACT(YEAR FROM t.data_hora) AS ano,
+    EXTRACT(MONTH FROM t.data_hora) AS mes,
+    t.categoria,
+    SUM(t.valor) AS total
+FROM transacao_entity t
+GROUP BY t.cartao_id, EXTRACT(YEAR FROM t.data_hora), EXTRACT(MONTH FROM t.data_hora), t.categoria;
+

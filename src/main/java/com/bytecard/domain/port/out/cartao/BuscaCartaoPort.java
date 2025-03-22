@@ -10,4 +10,6 @@ public interface BuscaCartaoPort {
     Page<Cartao> findAllOrdenadosPaginados(Integer numeroPagina, Integer tamanhoPagina);
 
     Optional<Cartao> findById(Long id);
+
+    Optional<Cartao> findByNumero(String numero);
 }

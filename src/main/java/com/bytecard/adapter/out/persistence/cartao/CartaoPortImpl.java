@@ -67,6 +67,12 @@ public class CartaoPortImpl implements BuscaCartaoPort, RegistraCartaoPort {
         return cartao.map(this::converterParaCartao);
     }
 
+    @Override
+    public Optional<Cartao> findByNumero(String numero) {
+        var cartao = cartaoRepository.findByNumero(numero);
+        return cartao.map(this::converterParaCartao);
+    }
+
 
     private Cartao converterParaCartao(CartaoEntity cartaoEntity) {
         return Cartao.builder()
