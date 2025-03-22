@@ -30,3 +30,13 @@ CREATE TABLE transacao_entity (
                                   cartao_id  BIGINT NOT NULL,
                                   FOREIGN KEY (cartao_id) REFERENCES cartao_entity(id) ON DELETE CASCADE
 );
+
+
+--Index para tabela CLIENTE
+
+CREATE UNIQUE INDEX unq_cliente_email ON cliente_entity (email);
+CREATE UNIQUE INDEX unq_cliente_cpf ON cliente_entity (cpf);
+
+
+--Index para a tabela CARTÃO
+CREATE UNIQUE INDEX unq_cartao_numero ON cartao_entity (numero);

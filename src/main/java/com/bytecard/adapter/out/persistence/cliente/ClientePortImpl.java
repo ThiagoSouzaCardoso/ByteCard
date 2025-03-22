@@ -2,7 +2,6 @@ package com.bytecard.adapter.out.persistence.cliente;
 
 import com.bytecard.adapter.out.persistence.cliente.entity.ClienteEntity;
 import com.bytecard.adapter.out.persistence.cliente.repository.ClienteRespository;
-import com.bytecard.domain.exception.UserAlreadyExistException;
 import com.bytecard.domain.model.Cliente;
 import com.bytecard.domain.port.out.cliente.BuscaClientePort;
 import com.bytecard.domain.port.out.cliente.RegistraClientePort;
@@ -22,11 +21,7 @@ public class ClientePortImpl implements RegistraClientePort, BuscaClientePort {
     @Override
     public Cliente register(Cliente cliente) {
 
-       if(clienteRespository.findByEmail(cliente.email()).isPresent()){
-           throw new UserAlreadyExistException("Usuário já Cadastrado!");
-       }
-
-        var clienteEntity = new ClienteEntity();
+       var clienteEntity = new ClienteEntity();
        clienteEntity.setCpf(cliente.cpf());
        clienteEntity.setNome(cliente.nome());
        clienteEntity.setEmail(cliente.email());
@@ -54,6 +49,11 @@ public class ClientePortImpl implements RegistraClientePort, BuscaClientePort {
                         .senha(clienteEntity.getSenha())
                         .build()
                 );
+    }
+
+    @Override
+    public boolean existeClienteCadastrado(String email, String cpf) {
+        return  clienteRespository.existsByEmailOrCpf(email, cpf);
     }
 
 }

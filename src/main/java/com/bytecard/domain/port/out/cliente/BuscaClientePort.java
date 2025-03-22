@@ -8,4 +8,5 @@ public interface BuscaClientePort {
 
     Optional<Cliente> findClienteByEmail(String email);
 
+    boolean existeClienteCadastrado(String email, String cpf);
 }

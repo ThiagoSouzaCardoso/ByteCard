@@ -2,8 +2,8 @@ package com.bytecard.adapter.in.web.auth;
 
 import com.bytecard.adapter.in.web.auth.inputs.RegisterInput;
 import com.bytecard.config.JwtService;
-import com.bytecard.domain.model.Cliente;
 import com.bytecard.domain.port.in.cliente.ClienteUseCase;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -45,16 +45,8 @@ public class AutorizacaoController {
 
     @PostMapping("/registros")
     @ResponseStatus(HttpStatus.OK)
-    public void registerUser(@RequestBody RegisterInput registerInput) {
-
-        Cliente newUser = Cliente.builder()
-                .email(registerInput.email())
-                .senha(registerInput.senha())
-                .cpf(registerInput.cpf())
-                .nome(registerInput.nome())
-                .papel(registerInput.papel())
-                .build();
-
-        clienteUseCase.register(newUser);
+    public void registerUser(@Valid @RequestBody RegisterInput registerInput) {
+        clienteUseCase.register(registerInput.toModel());
     }
+
 }
