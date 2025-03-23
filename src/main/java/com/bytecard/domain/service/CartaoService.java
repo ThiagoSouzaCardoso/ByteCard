@@ -53,8 +53,8 @@ public class CartaoService implements CartaoUseCase {
     }
 
     @Override
-    public Page<Cartao> getAllCartoes(Integer pageNo, Integer pageSize) {
-        return buscaCartaoPort.findAllOrdenadosPaginados(pageNo,pageSize);
+    public Page<Cartao> getAllCartoes(Integer pageNo, Integer pageSize,String cpf, String numeroCartao) {
+        return buscaCartaoPort.findAllOrdenadosPaginados(pageNo,pageSize,cpf,numeroCartao);
     }
 
     @Override

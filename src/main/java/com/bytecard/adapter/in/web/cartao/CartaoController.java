@@ -56,9 +56,11 @@ public class CartaoController implements CartaoControllerSwagger{
    @PreAuthorize("hasRole('GERENTE')")
    @Override
    public PagedModel<CartaoResponse> listarCartoes(@RequestParam(defaultValue = "0") Integer pageNo,
-                                                   @RequestParam(defaultValue = "10") Integer pageSize) {
+                                                   @RequestParam(defaultValue = "10") Integer pageSize,
+                                                   @RequestParam(required = false) String cpf,
+                                                   @RequestParam(required = false) String numerocartao) {
 
-        Page<Cartao> cartoes = cartaoUseCase.getAllCartoes(pageNo,pageSize);
+        Page<Cartao> cartoes = cartaoUseCase.getAllCartoes(pageNo,pageSize,cpf,numerocartao);
 
        return pagedResourcesAssembler.toModel(cartoes, cartaoHateaosAssembler);
 

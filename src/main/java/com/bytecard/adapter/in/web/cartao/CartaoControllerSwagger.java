@@ -21,7 +21,10 @@ public interface CartaoControllerSwagger {
 
     @Operation(summary = "Listar todos os cartões", description = "Retorna uma lista de cartões cadastrados.")
     PagedModel<CartaoResponse> listarCartoes(@RequestParam(defaultValue = "0") Integer pageNo,
-                                             @RequestParam(defaultValue = "10") Integer pageSize);
+                                             @RequestParam(defaultValue = "10") Integer pageSize,
+                                             @RequestParam(required = false) String cpf,
+                                             @RequestParam(required = false) String numeroCartao
+    );
 
     @Operation(summary = "Alterar limite do cartão", description = "Modifica o limite de crédito do cartão.")
     CartaoResponse alterarLimite(@PathVariable Long id, @RequestBody BigDecimal novoLimite);

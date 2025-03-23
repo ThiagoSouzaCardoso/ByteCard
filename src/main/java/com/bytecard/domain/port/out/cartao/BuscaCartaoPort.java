@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface BuscaCartaoPort {
 
-    Page<Cartao> findAllOrdenadosPaginados(Integer numeroPagina, Integer tamanhoPagina);
+    Page<Cartao> findAllOrdenadosPaginados(Integer numeroPagina, Integer tamanhoPagina,String cpf, String numeroCartao);
 
     Optional<Cartao> findById(Long id);
 

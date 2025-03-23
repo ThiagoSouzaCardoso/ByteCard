@@ -10,7 +10,7 @@ public interface CartaoUseCase {
 
     Cartao register(Cartao cartao);
 
-    Page<Cartao> getAllCartoes(Integer pageNo, Integer pageSize);
+    Page<Cartao> getAllCartoes(Integer pageNo, Integer pageSize,String cpf, String numeroCartao);
 
     Cartao alterarLimit(BigDecimal limite, Long id);
 

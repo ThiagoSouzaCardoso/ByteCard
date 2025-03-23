@@ -49,10 +49,10 @@ public class CartaoPortImpl implements BuscaCartaoPort, RegistraCartaoPort {
     }
 
     @Override
-    public Page<Cartao> findAllOrdenadosPaginados(Integer numeroPagina, Integer tamanhoPagina) {
+    public Page<Cartao> findAllOrdenadosPaginados(Integer numeroPagina, Integer tamanhoPagina,String cpf, String numeroCartao) {
 
         Pageable pageable = PageRequest.of(numeroPagina, tamanhoPagina);
-        Page<CartaoEntity> result = cartaoRepository.findAllOrdered(pageable);
+        Page<CartaoEntity> result = cartaoRepository.findAllOrdered(cpf,numeroCartao,pageable);
 
         List<Cartao> cartoes = result.getContent().stream()
                 .map(this::converterParaCartao)

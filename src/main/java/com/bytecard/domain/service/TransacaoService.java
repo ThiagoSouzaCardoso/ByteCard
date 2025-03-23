@@ -1,7 +1,5 @@
 package com.bytecard.domain.service;
 
-import com.bytecard.adapter.in.web.transacao.inputs.RelatorioGastosRequest;
-import com.bytecard.adapter.in.web.transacao.outputs.RelatorioGastosResponse;
 import com.bytecard.adapter.out.persistence.transacao.repository.TransacaoRepository;
 import com.bytecard.domain.exception.CartaoNotFoundException;
 import com.bytecard.domain.exception.RelatorioEmptyException;
