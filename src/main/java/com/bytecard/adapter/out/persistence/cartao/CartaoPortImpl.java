@@ -34,6 +34,7 @@ public class CartaoPortImpl implements BuscaCartaoPort, RegistraCartaoPort {
                .orElseThrow(() -> new ClienteNotFoundException("Usuário não encontrado"));
 
         var cartaoEntity = CartaoEntity.builder()
+                .id(cartao.getId())
                 .cvv(cartao.getCvv())
                 .numero(cartao.getNumero())
                 .validade(cartao.getValidade())
