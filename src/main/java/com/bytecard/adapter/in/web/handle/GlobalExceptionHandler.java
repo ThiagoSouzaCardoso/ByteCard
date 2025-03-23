@@ -1,5 +1,7 @@
 package com.bytecard.adapter.in.web.handle;
 
+import com.bytecard.domain.exception.CartaoBloqueadoException;
+import com.bytecard.domain.exception.CartaoCanceladoException;
 import com.bytecard.domain.exception.CartaoNotFoundException;
 import com.bytecard.domain.exception.ClienteNotFoundException;
 import com.bytecard.domain.exception.RelatorioEmptyException;
@@ -56,6 +58,18 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>> handleRelatorioEmpty(RelatorioEmptyException ex) {
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
                 .body(buildErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage(), "Relatório vazio"));
+    }
+
+    @ExceptionHandler(CartaoBloqueadoException.class)
+    public ResponseEntity<Map<String, Object>> handleForbidden(CartaoBloqueadoException ex) {
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
+                .body(buildErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage(), "Cartão indisponível"));
+    }
+
+    @ExceptionHandler(CartaoCanceladoException.class)
+    public ResponseEntity<Map<String, Object>> handleForbidden(CartaoCanceladoException ex) {
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
+                .body(buildErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage(), "Cartão indisponível"));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
