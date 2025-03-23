@@ -2,7 +2,6 @@ package com.bytecard.adapter.out.persistence.transacao.repository;
 
 import com.bytecard.adapter.out.persistence.transacao.entity.TransacaoEntity;
 import com.bytecard.domain.model.GastoCategoria;
-import com.bytecard.domain.model.Transacao;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
