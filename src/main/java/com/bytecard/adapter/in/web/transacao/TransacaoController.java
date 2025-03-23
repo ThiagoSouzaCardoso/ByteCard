@@ -2,10 +2,12 @@ package com.bytecard.adapter.in.web.transacao;
 
 import com.bytecard.adapter.in.web.transacao.inputs.CriarCompraRequest;
 import com.bytecard.adapter.in.web.transacao.inputs.RelatorioGastosRequest;
+import com.bytecard.adapter.in.web.transacao.outputs.GastoPorCategoriaResponse;
 import com.bytecard.adapter.in.web.transacao.outputs.RelatorioGastosResponse;
 import com.bytecard.adapter.in.web.transacao.outputs.TransacaoHateaosAssembler;
 import com.bytecard.adapter.in.web.transacao.outputs.TransacaoResponse;
 import com.bytecard.domain.model.Transacao;
+import com.bytecard.domain.port.in.transacao.TransacaoUseCase;
 import com.bytecard.domain.service.TransacaoService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -21,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TransacaoController implements TransacaoControllerSwagger {
 
     private final TransacaoHateaosAssembler transacaoHateaosAssembler;
-    private final TransacaoService transacaoService;
+    private final TransacaoUseCase transacaoService;
 
     public TransacaoController(TransacaoHateaosAssembler transacaoHateaosAssembler, TransacaoService transacaoService) {
         this.transacaoHateaosAssembler = transacaoHateaosAssembler;
@@ -38,8 +40,16 @@ public class TransacaoController implements TransacaoControllerSwagger {
     @PostMapping("/relatorio")
     @Operation(summary = "Relatório de gastos por categoria", description = "Retorna a soma dos gastos por categoria em um mês específico para um cartão.")
     public RelatorioGastosResponse relatorioDeGastos(@Valid @RequestBody RelatorioGastosRequest request) {
-        return transacaoService.gerarRelatorioPorCategoria(request);
-    }
 
+       var relatorio = transacaoService.gerarRelatorioPorCategoria(request.toModel());
+        return new RelatorioGastosResponse(
+                relatorio.cartaoNumero(),
+                relatorio.mes(),
+                relatorio.gastos().stream()
+                        .map(GastoPorCategoriaResponse::from)
+                        .toList(),
+                relatorio.valorTotalGasto()
+        );
+    }
 
 }

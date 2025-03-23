@@ -4,8 +4,11 @@ import com.bytecard.adapter.in.web.transacao.inputs.RelatorioGastosRequest;
 import com.bytecard.adapter.in.web.transacao.outputs.RelatorioGastosResponse;
 import com.bytecard.adapter.out.persistence.transacao.repository.TransacaoRepository;
 import com.bytecard.domain.exception.CartaoNotFoundException;
+import com.bytecard.domain.exception.RelatorioEmptyException;
 import com.bytecard.domain.model.Cartao;
+import com.bytecard.domain.model.CriarRelatorio;
 import com.bytecard.domain.model.GastoCategoria;
+import com.bytecard.domain.model.RelatorioGastos;
 import com.bytecard.domain.model.Transacao;
 import com.bytecard.domain.port.in.transacao.TransacaoUseCase;
 import com.bytecard.domain.port.out.cartao.BuscaCartaoPort;
@@ -44,7 +47,7 @@ public class TransacaoService implements TransacaoUseCase {
        return  registrarTransacaoPort.registrar(novaaTransacao);
     }
 
-    public RelatorioGastosResponse gerarRelatorioPorCategoria(RelatorioGastosRequest request) {
+    public RelatorioGastos gerarRelatorioPorCategoria(CriarRelatorio request) {
         Integer ano = request.mesAno().getYear();
         Integer mes = request.mesAno().getMonthValue();
 
@@ -54,14 +57,14 @@ public class TransacaoService implements TransacaoUseCase {
         List<GastoCategoria>  gastos = relatorioTransacaoPort.getSomatorioGastosPorCategoriaNoMes(cartao.getId(), ano, mes);
 
         if (gastos.isEmpty()) {
-            throw new RuntimeException("Nenhuma compra realizada no período.");
+            throw new RelatorioEmptyException("Nenhuma compra realizada no período.");
         }
 
         BigDecimal total = gastos.stream()
                 .map(GastoCategoria::total)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        return new RelatorioGastosResponse(
+        return new RelatorioGastos(
                 cartao.getNumero(),
                 String.format("%02d/%04d", mes, ano),
                 gastos,

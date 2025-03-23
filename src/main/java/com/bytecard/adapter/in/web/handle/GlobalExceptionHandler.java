@@ -2,6 +2,7 @@ package com.bytecard.adapter.in.web.handle;
 
 import com.bytecard.domain.exception.CartaoNotFoundException;
 import com.bytecard.domain.exception.ClienteNotFoundException;
+import com.bytecard.domain.exception.RelatorioEmptyException;
 import com.bytecard.domain.exception.UserAlreadyExistException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,66 +18,55 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+
+    private Map<String, Object> buildErrorResponse(HttpStatus status, String message, String errorLabel) {
+        return Map.of(
+                "timestamp", OffsetDateTime.now(),
+                "status", status.value(),
+                "error", errorLabel,
+                "message", message
+        );
+    }
+
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<Map<String, Object>> handleUsernameNotFoundException(UsernameNotFoundException ex) {
-        Map<String, Object> response = Map.of(
-                "timestamp", OffsetDateTime.now(),
-                "status", HttpStatus.UNAUTHORIZED.value(),
-                "error", "Usuário não Autorizado",
-                "message", ex.getMessage()
-        );
-
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage(), "Usuário não Autorizado"));
     }
 
     @ExceptionHandler(ClienteNotFoundException.class)
-    public ResponseEntity<Map<String, Object>> handleUsernameNotFoundException(ClienteNotFoundException ex) {
-        Map<String, Object> response = Map.of(
-                "timestamp", OffsetDateTime.now(),
-                "status", HttpStatus.NOT_FOUND.value(),
-                "error", "Usuário não Autorizado",
-                "message", ex.getMessage()
-        );
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    public ResponseEntity<Map<String, Object>> handleClienteNotFound(ClienteNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage(), "Cliente não encontrado"));
     }
 
     @ExceptionHandler(CartaoNotFoundException.class)
-    public ResponseEntity<Map<String, Object>> handleUsernameNotFoundException(CartaoNotFoundException ex) {
-        Map<String, Object> response = Map.of(
-                "timestamp", OffsetDateTime.now(),
-                "status", HttpStatus.NOT_FOUND.value(),
-                "error", "Usuário não Autorizado",
-                "message", ex.getMessage()
-        );
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    public ResponseEntity<Map<String, Object>> handleCartaoNotFound(CartaoNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage(), "Cartão não encontrado"));
     }
 
     @ExceptionHandler(UserAlreadyExistException.class)
-    public ResponseEntity<Map<String, Object>> handleUsernameNotFoundException(UserAlreadyExistException ex) {
-        Map<String, Object> response = Map.of(
-                "timestamp", OffsetDateTime.now(),
-                "status", HttpStatus.CONFLICT.value(),
-                "error", "Usuário não Autorizado",
-                "message", ex.getMessage()
-        );
-
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+    public ResponseEntity<Map<String, Object>> handleUserAlreadyExists(UserAlreadyExistException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(buildErrorResponse(HttpStatus.CONFLICT, ex.getMessage(), "Conflito de dados"));
     }
 
+    @ExceptionHandler(RelatorioEmptyException.class)
+    public ResponseEntity<Map<String, Object>> handleRelatorioEmpty(RelatorioEmptyException ex) {
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
+                .body(buildErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage(), "Relatório vazio"));
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationErrors(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
-
         ex.getBindingResult().getFieldErrors().forEach(error ->
                 errors.put(error.getField(), error.getDefaultMessage())
         );
 
         return ResponseEntity.badRequest().body(errors);
     }
-
 
 }
 
