@@ -32,22 +32,22 @@ public class CartaoHateaosAssembler extends RepresentationModelAssemblerSupport<
 
 
         cartaoResponse.add(linkTo(methodOn(CartaoController.class)
-                .alterarLimite(cartao.getId(), cartao.getLimite())).withRel("alterar-limite"));
+                .alterarLimite(cartao.getNumero(), cartao.getLimite())).withRel("alterar-limite"));
 
         cartaoResponse.add(linkTo(methodOn(CartaoController.class)
-                .verFatura(cartao.getId())).withRel("ver-fatura"));
+                .visualizarFatura(cartao.getNumero(),YearMonth.now())).withRel("ver-fatura"));
 
         cartaoResponse.add(linkTo(methodOn(CartaoController.class)
-                .ativarCartao(cartao.getId())).withRel("ativar"));
+                .ativarCartao(cartao.getNumero())).withRel("ativar"));
 
         cartaoResponse.add(linkTo(methodOn(CartaoController.class)
-                .cancelarCartao(cartao.getId())).withRel("cancelar"));
+                .cancelarCartao(cartao.getNumero())).withRel("cancelar"));
 
         cartaoResponse.add(linkTo(methodOn(CartaoController.class)
-                .bloquearCartao(cartao.getId())).withRel("bloquear"));
+                .bloquearCartao(cartao.getNumero())).withRel("bloquear"));
 
         cartaoResponse.add(linkTo(methodOn(CartaoController.class)
-                .listarCartoes(0,10,null,null)).withRel("listar-cartoes"));
+                .listarCartoes(0,10,cartao.getCliente().cpf(),cartao.getNumero())).withRel("listar-cartoes"));
 
         return cartaoResponse;
     }

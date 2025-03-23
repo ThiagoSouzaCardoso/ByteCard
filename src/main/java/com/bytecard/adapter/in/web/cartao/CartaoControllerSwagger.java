@@ -2,15 +2,22 @@ package com.bytecard.adapter.in.web.cartao;
 
 import com.bytecard.adapter.in.web.cartao.inputs.CriarCartaoRequest;
 import com.bytecard.adapter.in.web.cartao.outputs.CartaoResponse;
+import com.bytecard.adapter.in.web.cartao.outputs.FaturaResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.math.BigDecimal;
+import java.time.YearMonth;
 
 @Tag(name = "Cartões", description = "Gerenciamento de cartões de crédito")
 public interface CartaoControllerSwagger {
@@ -27,19 +34,21 @@ public interface CartaoControllerSwagger {
     );
 
     @Operation(summary = "Alterar limite do cartão", description = "Modifica o limite de crédito do cartão.")
-    CartaoResponse alterarLimite(@PathVariable Long id, @RequestBody BigDecimal novoLimite);
+    CartaoResponse alterarLimite(@PathVariable String numeroCartao, @RequestBody BigDecimal novoLimite);
 
     @Operation(summary = "Ativar cartão", description = "Altera o status do cartão para ATIVO.")
-    CartaoResponse ativarCartao(@PathVariable Long id);
+    CartaoResponse ativarCartao(@PathVariable String numeroCartao);
 
     @Operation(summary = "Cancelar cartão", description = "Altera o status do cartão para CANCELADO.")
-    CartaoResponse cancelarCartao(@PathVariable Long id);
+    CartaoResponse cancelarCartao(@PathVariable String numeroCartao);
 
     @Operation(summary = "Bloquear cartão", description = "Altera o status do cartão para BLOQUEADO.")
-    CartaoResponse bloquearCartao(@PathVariable Long id);
+    CartaoResponse bloquearCartao(@PathVariable String numeroCartao);
 
     @Operation(summary = "Ver fatura", description = "Retorna a fatura atual do cartão.")
-    EntityModel<String> verFatura(@PathVariable Long id);
+    FaturaResponse visualizarFatura(
+            @PathVariable String numeroCartao,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM") YearMonth mesAno);
 
 
 

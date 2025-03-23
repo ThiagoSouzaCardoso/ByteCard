@@ -9,6 +9,7 @@ import com.bytecard.adapter.out.persistence.transacao.repository.TransacaoReposi
 import com.bytecard.domain.model.Cartao;
 import com.bytecard.domain.model.GastoCategoria;
 import com.bytecard.domain.model.Transacao;
+import com.bytecard.domain.port.out.transacao.BuscaTransacaoPort;
 import com.bytecard.domain.port.out.transacao.RegistrarTransacaoPort;
 import com.bytecard.domain.port.out.transacao.RelatorioTransacaoPort;
 import lombok.AllArgsConstructor;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Component
-public class TransacaoPortImpl implements RegistrarTransacaoPort, RelatorioTransacaoPort {
+public class TransacaoPortImpl implements RegistrarTransacaoPort, RelatorioTransacaoPort , BuscaTransacaoPort {
 
     private TransacaoRepository transacaoRepository;
     private CartaoRepository cartaoRepository;
@@ -67,5 +68,21 @@ public class TransacaoPortImpl implements RegistrarTransacaoPort, RelatorioTrans
                         view.getTotal()
                 ))
                 .collect(Collectors.toList());
+    }
+
+
+    @Override
+    public List<Transacao> findByCartaoNumeroAndMes(String numeroCartao, Integer year, Integer monthValue) {
+
+       var transacoes = transacaoRepository.findByCartaoNumeroAndMes(numeroCartao,year,monthValue);
+       return transacoes.stream().map(trasacaoEntity ->
+               Transacao.builder()
+                       .id(trasacaoEntity.getId())
+                       .valor(trasacaoEntity.getValor())
+                       .estabelecimento(trasacaoEntity.getEstabelecimento())
+                       .categoria(trasacaoEntity.getCategoria())
+                       .data(trasacaoEntity.getDataHora())
+                       .build())
+               .toList();
     }
 }

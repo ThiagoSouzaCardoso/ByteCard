@@ -3,13 +3,14 @@ package com.bytecard.adapter.in.web.cartao;
 import com.bytecard.adapter.in.web.cartao.inputs.CriarCartaoRequest;
 import com.bytecard.adapter.in.web.cartao.outputs.CartaoHateaosAssembler;
 import com.bytecard.adapter.in.web.cartao.outputs.CartaoResponse;
+import com.bytecard.adapter.in.web.cartao.outputs.FaturaResponse;
 import com.bytecard.domain.model.Cartao;
 import com.bytecard.domain.model.StatusCartao;
 import com.bytecard.domain.port.in.cartao.CartaoUseCase;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.hateoas.EntityModel;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
+import java.time.YearMonth;
 
 @RestController
 @RequestMapping("/cartoes")
@@ -33,7 +35,9 @@ public class CartaoController implements CartaoControllerSwagger{
     private final CartaoHateaosAssembler cartaoHateaosAssembler;
     private final PagedResourcesAssembler<Cartao> pagedResourcesAssembler;
 
-    public CartaoController(CartaoUseCase cartaoUseCase, CartaoHateaosAssembler cartaoHateaosAssembler, PagedResourcesAssembler<Cartao> pagedResourcesAssembler) {
+    public CartaoController(CartaoUseCase cartaoUseCase,
+                            CartaoHateaosAssembler cartaoHateaosAssembler,
+                            PagedResourcesAssembler<Cartao> pagedResourcesAssembler) {
         this.cartaoUseCase = cartaoUseCase;
         this.cartaoHateaosAssembler = cartaoHateaosAssembler;
         this.pagedResourcesAssembler = pagedResourcesAssembler;
@@ -58,51 +62,56 @@ public class CartaoController implements CartaoControllerSwagger{
    public PagedModel<CartaoResponse> listarCartoes(@RequestParam(defaultValue = "0") Integer pageNo,
                                                    @RequestParam(defaultValue = "10") Integer pageSize,
                                                    @RequestParam(required = false) String cpf,
-                                                   @RequestParam(required = false) String numerocartao) {
+                                                   @RequestParam(required = false) String numero) {
 
-        Page<Cartao> cartoes = cartaoUseCase.getAllCartoes(pageNo,pageSize,cpf,numerocartao);
+        Page<Cartao> cartoes = cartaoUseCase.getAllCartoes(pageNo,pageSize,cpf,numero);
 
        return pagedResourcesAssembler.toModel(cartoes, cartaoHateaosAssembler);
 
    }
 
-    @PatchMapping("/{id}/alterar-limite")
+    @PatchMapping("/{numero}/alterar-limite")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('GERENTE')")
     @Override
-    public CartaoResponse alterarLimite(@PathVariable Long id, @RequestBody BigDecimal novoLimite) {
-        return cartaoHateaosAssembler.toModel(cartaoUseCase.alterarLimit(novoLimite,id));
+    public CartaoResponse alterarLimite(@PathVariable String numero, @RequestBody BigDecimal novoLimite) {
+        return cartaoHateaosAssembler.toModel(cartaoUseCase.alterarLimit(novoLimite,numero));
     }
 
-    @PatchMapping("/{id}/ativar")
+    @PatchMapping("/{numero}/ativar")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('GERENTE')")
     @Override
-    public CartaoResponse ativarCartao(@PathVariable Long id) {
-        return cartaoHateaosAssembler.toModel(cartaoUseCase.alterarStatusCartao(id, StatusCartao.ATIVO));
+    public CartaoResponse ativarCartao(@PathVariable String numero) {
+        return cartaoHateaosAssembler.toModel(cartaoUseCase.alterarStatusCartao(numero, StatusCartao.ATIVO));
     }
 
-    @PatchMapping("/{id}/cancelar")
+    @PatchMapping("/{numero}/cancelar")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('GERENTE')")
     @Override
-    public CartaoResponse cancelarCartao(@PathVariable Long id) {
-        return cartaoHateaosAssembler.toModel(cartaoUseCase.alterarStatusCartao(id,StatusCartao.CANCELADO));
+    public CartaoResponse cancelarCartao(@PathVariable String numero) {
+        return cartaoHateaosAssembler.toModel(cartaoUseCase.alterarStatusCartao(numero,StatusCartao.CANCELADO));
     }
 
-    @PatchMapping("/{id}/bloquear")
+    @PatchMapping("/{numero}/bloquear")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('GERENTE')")
     @Override
-    public CartaoResponse bloquearCartao(@PathVariable Long id) {
-        return cartaoHateaosAssembler.toModel(cartaoUseCase.alterarStatusCartao(id,StatusCartao.BLOQUEADO));
+    public CartaoResponse bloquearCartao(@PathVariable String numero) {
+        return cartaoHateaosAssembler.toModel(cartaoUseCase.alterarStatusCartao(numero,StatusCartao.BLOQUEADO));
     }
 
-    @GetMapping("/{id}/faturas")
+
+    @GetMapping("/{numero}/fatura")
     @ResponseStatus(HttpStatus.OK)
-    @Override
-    public EntityModel<String> verFatura(@PathVariable Long id) {
-        return EntityModel.of("Fatura do cartão " + id);
+    @PreAuthorize("hasRole('GERENTE')")
+    public FaturaResponse visualizarFatura(
+            @PathVariable String numero,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM") YearMonth mesAno) {
+
+        FaturaResponse fatura = cartaoUseCase.gerarFaturaPorNumero(numero, mesAno);
+        return fatura;
     }
 
 }
