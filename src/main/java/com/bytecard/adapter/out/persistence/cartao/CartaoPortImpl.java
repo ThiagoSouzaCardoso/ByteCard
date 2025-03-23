@@ -41,7 +41,7 @@ public class CartaoPortImpl implements BuscaCartaoPort, RegistraCartaoPort {
                 .validade(cartao.getValidade())
                 .status(cartao.getStatus())
                 .limite(cartao.getLimite())
-                .limiteUtilizado(BigDecimal.ZERO)
+                .limiteUtilizado(cartao.getLimiteUtilizado())
                 .cliente(cliente)
                 .build();
 
@@ -82,7 +82,7 @@ public class CartaoPortImpl implements BuscaCartaoPort, RegistraCartaoPort {
                 .id(cartaoEntity.getId())
                 .numero(cartaoEntity.getNumero())
                 .limite(cartaoEntity.getLimite())
-                .limiteUtilizado(cartaoEntity.getLimite())
+                .limiteUtilizado(cartaoEntity.getLimiteUtilizado())
                 .cvv(cartaoEntity.getCvv())
                 .validade(cartaoEntity.getValidade())
                 .status(cartaoEntity.getStatus())

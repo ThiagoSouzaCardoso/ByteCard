@@ -55,6 +55,7 @@ public class CartaoService implements CartaoUseCase {
                 .validade(YearMonth.now().plusYears(4).plusMonths(6))
                 .status(StatusCartao.ATIVO)
                 .limite(cartao.getLimite())
+                .limiteUtilizado(BigDecimal.ZERO)
                 .cliente(cliente.get())
                 .build();
 
