@@ -1,19 +1,13 @@
 package com.bytecard.domain.service;
 
-import com.bytecard.domain.exception.CartaoBloqueadoException;
-import com.bytecard.domain.exception.CartaoCanceladoException;
 import com.bytecard.domain.exception.CartaoNotFoundException;
-import com.bytecard.domain.exception.LimiteExcedidoException;
 import com.bytecard.domain.model.Cartao;
-import com.bytecard.domain.model.StatusCartao;
 import com.bytecard.domain.model.Transacao;
 import com.bytecard.domain.port.in.transacao.TransacaoUseCase;
 import com.bytecard.domain.port.out.cartao.BuscaCartaoPort;
 import com.bytecard.domain.port.out.cartao.RegistraCartaoPort;
 import com.bytecard.domain.port.out.transacao.RegistrarTransacaoPort;
 import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
 
 @Service
 public class TransacaoService implements TransacaoUseCase {

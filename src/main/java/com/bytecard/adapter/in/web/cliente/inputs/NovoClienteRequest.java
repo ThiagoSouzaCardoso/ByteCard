@@ -1,4 +1,4 @@
-package com.bytecard.adapter.in.web.auth.inputs;
+package com.bytecard.adapter.in.web.cliente.inputs;
 
 import com.bytecard.domain.model.Cliente;
 import jakarta.validation.constraints.Email;
@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-public record RegisterInput(
+public record NovoClienteRequest(
 
         @NotBlank(message = "Nome é obrigatório")
         @Size(min = 2, max = 100, message = "Nome deve ter entre 2 e 100 caracteres")
