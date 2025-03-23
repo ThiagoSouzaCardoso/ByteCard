@@ -4,6 +4,7 @@ import com.bytecard.domain.exception.CartaoBloqueadoException;
 import com.bytecard.domain.exception.CartaoCanceladoException;
 import com.bytecard.domain.exception.CartaoNotFoundException;
 import com.bytecard.domain.exception.ClienteNotFoundException;
+import com.bytecard.domain.exception.LimiteExcedidoException;
 import com.bytecard.domain.exception.RelatorioEmptyException;
 import com.bytecard.domain.exception.UserAlreadyExistException;
 import org.springframework.http.HttpStatus;
@@ -70,6 +71,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>> handleForbidden(CartaoCanceladoException ex) {
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
                 .body(buildErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage(), "Cartão indisponível"));
+    }
+
+    @ExceptionHandler(LimiteExcedidoException.class)
+    public ResponseEntity<Map<String, Object>> handleForbidden(LimiteExcedidoException ex) {
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
+                .body(buildErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage(), "Cartão não possui limite"));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

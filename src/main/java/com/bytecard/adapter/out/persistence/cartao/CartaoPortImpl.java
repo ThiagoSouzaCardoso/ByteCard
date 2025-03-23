@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -40,6 +41,7 @@ public class CartaoPortImpl implements BuscaCartaoPort, RegistraCartaoPort {
                 .validade(cartao.getValidade())
                 .status(cartao.getStatus())
                 .limite(cartao.getLimite())
+                .limiteUtilizado(BigDecimal.ZERO)
                 .cliente(cliente)
                 .build();
 
@@ -80,6 +82,7 @@ public class CartaoPortImpl implements BuscaCartaoPort, RegistraCartaoPort {
                 .id(cartaoEntity.getId())
                 .numero(cartaoEntity.getNumero())
                 .limite(cartaoEntity.getLimite())
+                .limiteUtilizado(cartaoEntity.getLimite())
                 .cvv(cartaoEntity.getCvv())
                 .validade(cartaoEntity.getValidade())
                 .status(cartaoEntity.getStatus())

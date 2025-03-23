@@ -49,6 +49,9 @@ public class CartaoEntity {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal limite;
 
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal limiteUtilizado;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private StatusCartao status;

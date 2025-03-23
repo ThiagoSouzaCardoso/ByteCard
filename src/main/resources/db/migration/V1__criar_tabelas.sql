@@ -14,6 +14,7 @@ CREATE TABLE cartao_entity (
                                numero      VARCHAR(16) NOT NULL UNIQUE,
                                cvv         VARCHAR(3)  NOT NULL,
                                limite      DECIMAL(10,2) NOT NULL DEFAULT 0,
+                               limite_utilizado DECIMAL(10,2) NOT NULL DEFAULT 0,
                                status      VARCHAR(20) CHECK (status IN ('ATIVO', 'BLOQUEADO', 'CANCELADO')),
                                validade    VARCHAR(7) NOT NULL,
                                cliente_id  BIGINT NOT NULL,
