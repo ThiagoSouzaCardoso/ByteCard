@@ -1,7 +1,7 @@
 package com.bytecard.domain.port.in.cartao;
 
-import com.bytecard.adapter.in.web.cartao.outputs.FaturaResponse;
 import com.bytecard.domain.model.Cartao;
+import com.bytecard.domain.model.Fatura;
 import com.bytecard.domain.model.StatusCartao;
 import org.springframework.data.domain.Page;
 
@@ -18,5 +18,5 @@ public interface CartaoUseCase {
 
     Cartao alterarStatusCartao(String numero, StatusCartao status);
 
-    FaturaResponse gerarFaturaPorNumero(String numeroCartao, YearMonth mesAno);
+    Fatura gerarFaturaPorNumero(String numeroCartao, YearMonth mesAno);
 }

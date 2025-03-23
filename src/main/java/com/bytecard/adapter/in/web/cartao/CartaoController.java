@@ -110,8 +110,7 @@ public class CartaoController implements CartaoControllerSwagger{
             @PathVariable String numero,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM") YearMonth mesAno) {
 
-        FaturaResponse fatura = cartaoUseCase.gerarFaturaPorNumero(numero, mesAno);
-        return fatura;
+        return FaturaResponse.from(cartaoUseCase.gerarFaturaPorNumero(numero, mesAno));
     }
 
 }

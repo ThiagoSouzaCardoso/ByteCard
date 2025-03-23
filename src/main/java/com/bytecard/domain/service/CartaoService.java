@@ -1,11 +1,11 @@
 package com.bytecard.domain.service;
 
 import com.bytecard.adapter.in.web.cartao.outputs.CompraItemResponse;
-import com.bytecard.adapter.in.web.cartao.outputs.FaturaResponse;
 import com.bytecard.domain.exception.CartaoNotFoundException;
 import com.bytecard.domain.exception.ClienteNotFoundException;
 import com.bytecard.domain.exception.RelatorioEmptyException;
 import com.bytecard.domain.model.Cartao;
+import com.bytecard.domain.model.Fatura;
 import com.bytecard.domain.model.StatusCartao;
 import com.bytecard.domain.model.Transacao;
 import com.bytecard.domain.port.in.cartao.CartaoUseCase;
@@ -92,7 +92,7 @@ public class CartaoService implements CartaoUseCase {
     }
 
     @Override
-    public FaturaResponse gerarFaturaPorNumero(String numeroCartao, YearMonth mesAno) {
+    public Fatura gerarFaturaPorNumero(String numeroCartao, YearMonth mesAno) {
 
      Cartao  cartao = buscaCartaoPort.findByNumero(numeroCartao).orElseThrow(
              () -> new CartaoNotFoundException("Cartão não encontrado")
@@ -115,12 +115,19 @@ public class CartaoService implements CartaoUseCase {
                 .map(CompraItemResponse::from)
                 .toList();
 
-        return new FaturaResponse(
-                cartao.getNumero(),
-                cartao.getCliente().nome(),
+        return new Fatura(
+                cartao.getCliente(),
+                cartao,
                 mesAno,
                 valorTotal,
-                itens
+                itens.stream().map(compraItemResponse -> {
+                    return Transacao.builder()
+                            .valor(compraItemResponse.valor())
+                            .data(compraItemResponse.data())
+                            .categoria(compraItemResponse.categoria())
+                            .estabelecimento(compraItemResponse.estabelecimento())
+                            .build();
+                }).toList()
         );
 
     }
