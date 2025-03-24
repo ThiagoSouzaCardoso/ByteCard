@@ -14,7 +14,7 @@ import java.time.YearMonth;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Builder(toBuilder = true)
 public class Cartao {
     private Long id;
     private String numero;
