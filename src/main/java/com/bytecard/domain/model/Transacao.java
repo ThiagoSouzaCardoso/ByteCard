@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
 @Getter
-@Builder
+@Builder(toBuilder = true)
 public class Transacao {
 
     private Long id;

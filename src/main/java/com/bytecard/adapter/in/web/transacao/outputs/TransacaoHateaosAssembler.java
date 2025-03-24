@@ -1,9 +1,15 @@
 package com.bytecard.adapter.in.web.transacao.outputs;
 
+import com.bytecard.adapter.in.web.cartao.CartaoController;
+import com.bytecard.adapter.in.web.cartao.inputs.AlterarLimitRequest;
 import com.bytecard.adapter.in.web.transacao.TransacaoController;
+import com.bytecard.adapter.in.web.transacao.inputs.CriarCompraRequest;
 import com.bytecard.domain.model.Transacao;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component
 public class TransacaoHateaosAssembler extends RepresentationModelAssemblerSupport<Transacao, TransacaoResponse> {
@@ -16,7 +22,7 @@ public class TransacaoHateaosAssembler extends RepresentationModelAssemblerSuppo
     @Override
     public TransacaoResponse toModel(Transacao model) {
 
-        return TransacaoResponse.builder()
+        var transacaoResponse =TransacaoResponse.builder()
                 .id(model.getId())
                 .valor(model.getValor())
                 .cartaoNumero(model.getCartao().getNumero())
@@ -24,5 +30,10 @@ public class TransacaoHateaosAssembler extends RepresentationModelAssemblerSuppo
                 .estabelecimento(model.getEstabelecimento())
                 .dataHora(model.getData())
                 .build();
+
+        transacaoResponse.add(linkTo(methodOn(TransacaoController.class)
+                .registrarCompra(CriarCompraRequest.builder().build())).withSelfRel());
+
+        return transacaoResponse;
     }
 }

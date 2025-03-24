@@ -19,17 +19,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class TransacaoController implements TransacaoControllerSwagger {
 
     private final TransacaoHateaosAssembler transacaoHateaosAssembler;
-    private final TransacaoUseCase transacaoService;
+    private final TransacaoUseCase transacaoUseCase;
 
-    public TransacaoController(TransacaoHateaosAssembler transacaoHateaosAssembler, TransacaoService transacaoService) {
+    public TransacaoController(TransacaoHateaosAssembler transacaoHateaosAssembler, TransacaoUseCase transacaoUseCase) {
         this.transacaoHateaosAssembler = transacaoHateaosAssembler;
-        this.transacaoService = transacaoService;
+        this.transacaoUseCase = transacaoUseCase;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public TransacaoResponse registrarCompra(@Valid @RequestBody CriarCompraRequest dto) {
-        Transacao transacaoCriada = transacaoService.registrarCompra(dto.toModel());
+        Transacao transacaoCriada = transacaoUseCase.registrarCompra(dto.toModel());
         return transacaoHateaosAssembler.toModel(transacaoCriada);
     }
 

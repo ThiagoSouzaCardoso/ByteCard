@@ -1,35 +1,33 @@
 package com.bytecard.adapter.in.web.relatorio;
+
 import com.bytecard.adapter.in.web.transacao.inputs.RelatorioGastosRequest;
-import com.bytecard.adapter.in.web.transacao.outputs.GastoPorCategoriaResponse;
 import com.bytecard.adapter.in.web.transacao.outputs.RelatorioGastosResponse;
 import com.bytecard.domain.exception.CartaoNotFoundException;
 import com.bytecard.domain.exception.RelatorioEmptyException;
-import com.bytecard.domain.model.CategoriaTransacao;
 import com.bytecard.domain.model.GastoCategoria;
 import com.bytecard.domain.model.RelatorioGastos;
 import com.bytecard.domain.port.in.relatorio.RelatorioUseCase;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.time.YearMonth;
 import java.util.List;
 
+import static com.bytecard.domain.model.CategoriaTransacao.ALIMENTACAO;
+import static com.bytecard.domain.model.CategoriaTransacao.CASA;
 import static com.bytecard.domain.model.CategoriaTransacao.EDUCACAO;
 import static com.bytecard.domain.model.CategoriaTransacao.SAUDE;
-import static com.bytecard.domain.model.CategoriaTransacao.CASA;
-import static com.bytecard.domain.model.CategoriaTransacao.ALIMENTACAO;
-
-
 import static com.bytecard.domain.model.CategoriaTransacao.TRANSPORTE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.argThat;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 
 @ExtendWith(MockitoExtension.class)
