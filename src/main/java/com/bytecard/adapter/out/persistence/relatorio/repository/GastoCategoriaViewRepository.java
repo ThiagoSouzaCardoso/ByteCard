@@ -1,7 +1,7 @@
-package com.bytecard.adapter.out.persistence.transacao.repository;
+package com.bytecard.adapter.out.persistence.relatorio.repository;
 
-import com.bytecard.adapter.out.persistence.transacao.entity.GastoCategoriaView;
-import com.bytecard.adapter.out.persistence.transacao.entity.GastoCategoriaViewId;
+import com.bytecard.adapter.out.persistence.relatorio.entity.GastoCategoriaView;
+import com.bytecard.adapter.out.persistence.relatorio.entity.GastoCategoriaViewId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

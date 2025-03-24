@@ -1,4 +1,4 @@
-package com.bytecard.adapter.out.persistence.transacao.entity;
+package com.bytecard.adapter.out.persistence.relatorio.entity;
 
 
 import jakarta.persistence.EmbeddedId;
