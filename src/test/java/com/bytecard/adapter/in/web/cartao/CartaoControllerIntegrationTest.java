@@ -2,6 +2,7 @@ package com.bytecard.adapter.in.web.cartao;
 
 import com.bytecard.adapter.in.web.autenticacao.input.LoginRequest;
 import com.bytecard.adapter.in.web.autenticacao.output.TokenResponse;
+import com.bytecard.adapter.in.web.cartao.inputs.AlterarLimitRequest;
 import com.bytecard.adapter.in.web.cartao.inputs.CriarCartaoRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -69,10 +70,13 @@ class CartaoControllerIntegrationTest {
 
     @Test
     void deveAlterarLimiteComSucesso() throws Exception {
+
+      var novoLimite =  new AlterarLimitRequest(BigDecimal.valueOf(2000.00));
+
         mockMvc.perform(patch("/cartoes/1234567812345678/alterar-limite")
                         .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("2000.00"))
+                        .content(objectMapper.writeValueAsString(novoLimite)))
                 .andExpect(status().isOk());
     }
 
@@ -149,6 +153,44 @@ class CartaoControllerIntegrationTest {
                         .param("numero", "1234567812345678"))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    void deveRetornar400QuandoNovoLimiteForNulo() throws Exception {
+        var novoLimite =  new AlterarLimitRequest(null);
+
+        mockMvc.perform(patch("/cartoes/1234567812345678/alterar-limite")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(novoLimite)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.novoLimite").value("O novo limite é obrigatório"));
+    }
+
+    @Test
+    void deveRetornar400QuandoNovoLimiteForZero() throws Exception {
+        var novoLimite =  new AlterarLimitRequest(BigDecimal.ZERO);
+        mockMvc.perform(patch("/cartoes/1234567812345678/alterar-limite")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(novoLimite)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.novoLimite").value("O limite deve ser maior que zero"));
+    }
+
+    @Test
+    void deveRetornar400QuandoNovoLimiteForNegativo() throws Exception {
+
+        var novoLimite =  new AlterarLimitRequest(BigDecimal.valueOf(-2000.00));
+
+
+        mockMvc.perform(patch("/cartoes/1234567812345678/alterar-limite")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(novoLimite)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.novoLimite").value("O limite deve ser maior que zero"));
+    }
+
 
 
 }

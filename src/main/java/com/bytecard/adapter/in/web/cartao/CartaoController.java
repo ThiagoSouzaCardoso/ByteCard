@@ -1,5 +1,6 @@
 package com.bytecard.adapter.in.web.cartao;
 
+import com.bytecard.adapter.in.web.cartao.inputs.AlterarLimitRequest;
 import com.bytecard.adapter.in.web.cartao.inputs.CriarCartaoRequest;
 import com.bytecard.adapter.in.web.cartao.outputs.CartaoHateaosAssembler;
 import com.bytecard.adapter.in.web.cartao.outputs.CartaoResponse;
@@ -74,8 +75,9 @@ public class CartaoController implements CartaoControllerSwagger{
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('GERENTE')")
     @Override
-    public CartaoResponse alterarLimite(@PathVariable String numero, @RequestBody BigDecimal novoLimite) {
-        return cartaoHateaosAssembler.toModel(cartaoUseCase.alterarLimit(novoLimite,numero));
+    public CartaoResponse alterarLimite(@PathVariable String numero,
+                                        @Valid @RequestBody AlterarLimitRequest alterarLimitRequest) {
+        return cartaoHateaosAssembler.toModel(cartaoUseCase.alterarLimit(alterarLimitRequest.novoLimite(),numero));
     }
 
     @PatchMapping("/{numero}/ativar")

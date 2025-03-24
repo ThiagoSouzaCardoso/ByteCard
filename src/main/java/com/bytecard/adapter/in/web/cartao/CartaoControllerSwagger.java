@@ -1,5 +1,6 @@
 package com.bytecard.adapter.in.web.cartao;
 
+import com.bytecard.adapter.in.web.cartao.inputs.AlterarLimitRequest;
 import com.bytecard.adapter.in.web.cartao.inputs.CriarCartaoRequest;
 import com.bytecard.adapter.in.web.cartao.outputs.CartaoResponse;
 import com.bytecard.adapter.in.web.cartao.outputs.FaturaResponse;
@@ -29,7 +30,7 @@ public interface CartaoControllerSwagger {
     );
 
     @Operation(summary = "Alterar limite do cartão", description = "Modifica o limite de crédito do cartão.")
-    CartaoResponse alterarLimite(@PathVariable String numeroCartao, @RequestBody BigDecimal novoLimite);
+    CartaoResponse alterarLimite(@PathVariable String numeroCartao, @RequestBody AlterarLimitRequest alterarLimitRequest);
 
     @Operation(summary = "Ativar cartão", description = "Altera o status do cartão para ATIVO.")
     CartaoResponse ativarCartao(@PathVariable String numeroCartao);

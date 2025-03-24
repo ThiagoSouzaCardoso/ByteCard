@@ -1,6 +1,7 @@
 package com.bytecard.adapter.in.web.cartao.outputs;
 
 import com.bytecard.adapter.in.web.cartao.CartaoController;
+import com.bytecard.adapter.in.web.cartao.inputs.AlterarLimitRequest;
 import com.bytecard.domain.model.Cartao;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
@@ -32,7 +33,7 @@ public class CartaoHateaosAssembler extends RepresentationModelAssemblerSupport<
 
 
         cartaoResponse.add(linkTo(methodOn(CartaoController.class)
-                .alterarLimite(cartao.getNumero(), cartao.getLimite())).withRel("alterar-limite"));
+                .alterarLimite(cartao.getNumero(), new AlterarLimitRequest(cartao.getLimite()))).withRel("alterar-limite"));
 
         cartaoResponse.add(linkTo(methodOn(CartaoController.class)
                 .visualizarFatura(cartao.getNumero(),YearMonth.now())).withRel("ver-fatura"));

@@ -1,5 +1,6 @@
 package com.bytecard.adapter.in.web.cartao;
 
+import com.bytecard.adapter.in.web.cartao.inputs.AlterarLimitRequest;
 import com.bytecard.adapter.in.web.cartao.inputs.CriarCartaoRequest;
 import com.bytecard.adapter.in.web.cartao.outputs.CartaoHateaosAssembler;
 import com.bytecard.adapter.in.web.cartao.outputs.CartaoResponse;
@@ -55,7 +56,7 @@ class CartaoControllerTest {
         when(cartaoUseCase.alterarLimit(any(), any())).thenReturn(mock(Cartao.class));
         when(assembler.toModel(any())).thenReturn(mock(CartaoResponse.class));
 
-        controller.alterarLimite("1234", BigDecimal.valueOf(500));
+        controller.alterarLimite("1234", new AlterarLimitRequest(BigDecimal.valueOf(500)));
 
         verify(cartaoUseCase).alterarLimit(BigDecimal.valueOf(500), "1234");
     }
