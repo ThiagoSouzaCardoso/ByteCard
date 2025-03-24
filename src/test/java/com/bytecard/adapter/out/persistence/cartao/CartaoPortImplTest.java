@@ -1,6 +1,5 @@
-package com.bytecard.adapter.out.persistence;
+package com.bytecard.adapter.out.persistence.cartao;
 
-import com.bytecard.adapter.out.persistence.cartao.CartaoPortImpl;
 import com.bytecard.adapter.out.persistence.cartao.entity.CartaoEntity;
 import com.bytecard.adapter.out.persistence.cartao.repository.CartaoRepository;
 import com.bytecard.adapter.out.persistence.cliente.entity.ClienteEntity;
