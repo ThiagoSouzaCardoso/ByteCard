@@ -5,7 +5,6 @@ import com.bytecard.adapter.in.web.transacao.outputs.TransacaoHateaosAssembler;
 import com.bytecard.adapter.in.web.transacao.outputs.TransacaoResponse;
 import com.bytecard.domain.model.Transacao;
 import com.bytecard.domain.port.in.transacao.TransacaoUseCase;
-import com.bytecard.domain.service.TransacaoService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -1,7 +1,5 @@
 package com.bytecard.adapter.in.web.transacao.outputs;
 
-import com.bytecard.adapter.in.web.cartao.CartaoController;
-import com.bytecard.adapter.in.web.cartao.inputs.AlterarLimitRequest;
 import com.bytecard.adapter.in.web.transacao.TransacaoController;
 import com.bytecard.adapter.in.web.transacao.inputs.CriarCompraRequest;
 import com.bytecard.domain.model.Transacao;
