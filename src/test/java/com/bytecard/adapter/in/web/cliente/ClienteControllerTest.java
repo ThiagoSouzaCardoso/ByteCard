@@ -1,8 +1,9 @@
-
 package com.bytecard.adapter.in.web.cliente;
 
 import com.bytecard.adapter.in.web.cliente.inputs.NovoClienteRequest;
 import com.bytecard.domain.port.in.cliente.ClienteUseCase;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,6 +14,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
+@DisplayName("ClienteController - Unit")
 class ClienteControllerTest {
 
     @Mock
@@ -21,19 +23,24 @@ class ClienteControllerTest {
     @InjectMocks
     private ClienteController clienteController;
 
-    @Test
-    void deveCadastrarNovoClienteComSucesso() {
-        // given
-        NovoClienteRequest request = new NovoClienteRequest(
-                "Maria",
-                "12345678900",
-                "maria@email.com",
-                "senha123",
-                "CLIENTE"
-        );
+    @Nested
+    @DisplayName("Cadastro de Cliente")
+    class CadastroCliente {
 
-        clienteController.registerUser(request);
+        @Test
+        @DisplayName("Deve chamar use case para cadastrar novo cliente com sucesso")
+        void deveCadastrarNovoClienteComSucesso() {
+            NovoClienteRequest request = new NovoClienteRequest(
+                    "Maria",
+                    "12345678900",
+                    "maria@email.com",
+                    "senha123",
+                    "CLIENTE"
+            );
 
-        verify(clienteUseCase).register(any());
+            clienteController.registerUser(request);
+
+            verify(clienteUseCase).register(any());
+        }
     }
 }
