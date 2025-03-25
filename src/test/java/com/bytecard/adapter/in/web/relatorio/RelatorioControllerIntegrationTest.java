@@ -5,6 +5,8 @@ import com.bytecard.adapter.in.web.autenticacao.output.TokenResponse;
 import com.bytecard.adapter.in.web.transacao.inputs.RelatorioGastosRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -23,6 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
+@DisplayName("RelatorioController - Integração")
 class RelatorioControllerIntegrationTest {
 
     @Autowired private MockMvc mockMvc;
@@ -46,70 +49,98 @@ class RelatorioControllerIntegrationTest {
         token = objectMapper.readValue(result.getResponse().getContentAsString(), TokenResponse.class).token();
     }
 
-    @Test
-    void deveGerarRelatorioDeGastosComSucesso() throws Exception {
+    @Nested
+    @DisplayName("Relatório de Gastos")
+    class RelatorioDeGastosTests {
 
-       var relatorioRequest = new RelatorioGastosRequest("1234567812345678",YearMonth.now());
+        @Test
+        @DisplayName("Deve gerar relatório de gastos com sucesso")
+        void deveGerarRelatorioDeGastosComSucesso() throws Exception {
+            var relatorioRequest = new RelatorioGastosRequest("1234567812345678", YearMonth.now());
 
-        mockMvc.perform(post("/relatorios")
-                        .header("Authorization", "Bearer " + token)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(relatorioRequest)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.cartaoNumero").value("1234567812345678"))
-                .andExpect(jsonPath("$.gastos").isArray())
-                .andExpect(jsonPath("$.valorTotalGasto").isNumber());
-    }
+            mockMvc.perform(post("/relatorios")
+                            .header("Authorization", "Bearer " + token)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(relatorioRequest)))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.cartaoNumero").value("1234567812345678"))
+                    .andExpect(jsonPath("$.gastos").isArray())
+                    .andExpect(jsonPath("$.valorTotalGasto").isNumber());
+        }
 
-    @Test
-    void deveRetornar404SeCartaoNaoExistir() throws Exception {
+        @Test
+        @DisplayName("Deve retornar 404 se cartão não existir")
+        void deveRetornar404SeCartaoNaoExistir() throws Exception {
+            var relatorioRequest = new RelatorioGastosRequest("0000000000000000", YearMonth.now());
 
-        var relatorioRequest = new RelatorioGastosRequest("0000000000000000",YearMonth.now());
+            mockMvc.perform(post("/relatorios")
+                            .header("Authorization", "Bearer " + token)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(relatorioRequest)))
+                    .andExpect(status().isNotFound())
+                    .andExpect(jsonPath("$.message").value("Cartão não encontrado"));
+        }
 
-        mockMvc.perform(post("/relatorios")
-                        .header("Authorization", "Bearer " + token)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(relatorioRequest)))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value("Cartão não encontrado"));
-    }
+        @Test
+        @DisplayName("Deve retornar 422 se não houver transações no período")
+        void deveRetornar422SeNaoHouverTransacoesNoPeriodo() throws Exception {
+            var relatorioRequest = new RelatorioGastosRequest("1234567812345678", YearMonth.of(2030, 1));
 
-    @Test
-    void deveRetornar422SeNaoHouverTransacoesNoPeriodo() throws Exception {
+            mockMvc.perform(post("/relatorios")
+                            .header("Authorization", "Bearer " + token)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(relatorioRequest)))
+                    .andExpect(status().isUnprocessableEntity())
+                    .andExpect(jsonPath("$.message").value("Nenhuma compra realizada no período."));
+        }
 
-        var relatorioRequest = new RelatorioGastosRequest("1234567812345678",YearMonth.of(2030, 1));
+        @Test
+        @DisplayName("Deve retornar 400 quando número do cartão estiver vazio")
+        void deveRetornar400QuandoNumeroCartaoEstiverVazio() throws Exception {
+            var relatorioRequest = new RelatorioGastosRequest("", YearMonth.now());
 
-        mockMvc.perform(post("/relatorios")
-                        .header("Authorization", "Bearer " + token)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(relatorioRequest)))
-                .andExpect(status().isUnprocessableEntity())
-                .andExpect(jsonPath("$.message").value("Nenhuma compra realizada no período."));
-    }
+            mockMvc.perform(post("/relatorios")
+                            .header("Authorization", "Bearer " + token)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(relatorioRequest)))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.numeroCartao").value("must not be blank"));
+        }
 
-    @Test
-    void deveRetornar400QuandoNumeroCartaoEstiverVazio() throws Exception {
+        @Test
+        @DisplayName("Deve retornar 400 quando mesAno for nulo")
+        void deveRetornar400QuandoMesAnoForNulo() throws Exception {
+            var relatorioRequest = new RelatorioGastosRequest("1234567812345678", null);
 
-        var relatorioRequest = new RelatorioGastosRequest("",YearMonth.now());
+            mockMvc.perform(post("/relatorios")
+                            .header("Authorization", "Bearer " + token)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(relatorioRequest)))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.mesAno").value("must not be null"));
+        }
 
-        mockMvc.perform(post("/relatorios")
-                        .header("Authorization", "Bearer " + token)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(relatorioRequest)))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.numeroCartao").value("must not be blank"));
-    }
+        @Test
+        @DisplayName("Deve retornar 400 para JSON malformado")
+        void deveRetornar400ParaJsonMalformado() throws Exception {
+            String jsonInvalido = "{\"numeroCartao\": \"1234567812345678\", \"mesAno\": }";
 
-    @Test
-    void deveRetornar400QuandoMesAnoForNulo() throws Exception {
+            mockMvc.perform(post("/relatorios")
+                            .header("Authorization", "Bearer " + token)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(jsonInvalido))
+                    .andExpect(status().isBadRequest());
+        }
 
-        var relatorioRequest = new RelatorioGastosRequest("1234567812345678",null);
+        @Test
+        @DisplayName("Deve retornar 403 quando token não for enviado")
+        void deveRetornar403SemToken() throws Exception {
+            var relatorioRequest = new RelatorioGastosRequest("1234567812345678", YearMonth.now());
 
-        mockMvc.perform(post("/relatorios")
-                        .header("Authorization", "Bearer " + token)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(relatorioRequest)))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.mesAno").value("must not be null"));
+            mockMvc.perform(post("/relatorios")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(relatorioRequest)))
+                    .andExpect(status().isForbidden());
+        }
     }
 }

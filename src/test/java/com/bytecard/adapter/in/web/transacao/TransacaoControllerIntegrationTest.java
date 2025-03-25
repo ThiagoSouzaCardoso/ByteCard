@@ -6,6 +6,8 @@ import com.bytecard.adapter.in.web.transacao.inputs.CriarCompraRequest;
 import com.bytecard.domain.model.CategoriaTransacao;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -24,6 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
+@DisplayName("TransacaoController - Integração")
 class TransacaoControllerIntegrationTest {
 
     @Autowired private MockMvc mockMvc;
@@ -47,77 +50,157 @@ class TransacaoControllerIntegrationTest {
         token = objectMapper.readValue(result.getResponse().getContentAsString(), TokenResponse.class).token();
     }
 
-    @Test
-    void deveRegistrarCompraComSucesso() throws Exception {
+    @Nested
+    @DisplayName("POST /compras")
+    class RegistrarCompra {
 
-        var request = CriarCompraRequest.builder()
-                .cartaoNumero("1234567812345678")
-                .estabelecimento("Restaurante Top")
-                .valor(BigDecimal.valueOf(150))
-                .categoria(CategoriaTransacao.ALIMENTACAO)
-                .build();
+        @Test
+        @DisplayName("Deve registrar compra com sucesso")
+        void deveRegistrarCompraComSucesso() throws Exception {
+            var request = CriarCompraRequest.builder()
+                    .cartaoNumero("1234567812345678")
+                    .estabelecimento("Restaurante Top")
+                    .valor(BigDecimal.valueOf(150))
+                    .categoria(CategoriaTransacao.ALIMENTACAO)
+                    .build();
 
-        mockMvc.perform(post("/compras")
-                        .header("Authorization", "Bearer " + token)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.valor").value(150.00))
-                .andExpect(jsonPath("$.categoria").value("ALIMENTACAO"))
-                .andExpect(jsonPath("$.estabelecimento").value("Restaurante Top"));
-    }
+            mockMvc.perform(post("/compras")
+                            .header("Authorization", "Bearer " + token)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().isCreated())
+                    .andExpect(jsonPath("$.valor").value(150.00))
+                    .andExpect(jsonPath("$.categoria").value("ALIMENTACAO"))
+                    .andExpect(jsonPath("$.estabelecimento").value("Restaurante Top"));
+        }
 
-    @Test
-    void deveFalharQuandoEstabelecimentoForMuitoCurto() throws Exception {
+        @Test
+        @DisplayName("Deve retornar 400 quando estabelecimento for muito curto")
+        void deveFalharQuandoEstabelecimentoForMuitoCurto() throws Exception {
+            var request = CriarCompraRequest.builder()
+                    .cartaoNumero("1234567812345678")
+                    .estabelecimento("abc")
+                    .valor(BigDecimal.valueOf(100))
+                    .categoria(CategoriaTransacao.SAUDE)
+                    .build();
 
-        var request = CriarCompraRequest.builder()
-                .cartaoNumero("1234567812345678")
-                .estabelecimento("abc")
-                .valor(BigDecimal.valueOf(100))
-                .categoria(CategoriaTransacao.SAUDE)
-                .build();
+            mockMvc.perform(post("/compras")
+                            .header("Authorization", "Bearer " + token)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.estabelecimento").exists());
+        }
 
-        mockMvc.perform(post("/compras")
-                        .header("Authorization", "Bearer " + token)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.estabelecimento").exists());
-    }
+        @Test
+        @DisplayName("Deve retornar 400 quando valor for negativo")
+        void deveFalharQuandoValorForNegativo() throws Exception {
+            var request = CriarCompraRequest.builder()
+                    .cartaoNumero("1234567812345678")
+                    .estabelecimento("Restaurante Top")
+                    .valor(BigDecimal.valueOf(-100))
+                    .categoria(CategoriaTransacao.OUTROS)
+                    .build();
 
-    @Test
-    void deveFalharQuandoValorForNegativo() throws Exception {
+            mockMvc.perform(post("/compras")
+                            .header("Authorization", "Bearer " + token)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.valor").exists());
+        }
 
-        var request = CriarCompraRequest.builder()
-                .cartaoNumero("1234567812345678")
-                .estabelecimento("Restaurante Top")
-                .valor(BigDecimal.valueOf(-100))
-                .categoria(CategoriaTransacao.OUTROS)
-                .build();
+        @Test
+        @DisplayName("Deve retornar 404 quando cartão não existir")
+        void deveFalharQuandoCartaoNaoExistir() throws Exception {
+            var request = CriarCompraRequest.builder()
+                    .cartaoNumero("0000000000000000")
+                    .estabelecimento("Restaurante Top")
+                    .valor(BigDecimal.valueOf(100))
+                    .categoria(CategoriaTransacao.CASA)
+                    .build();
 
-        mockMvc.perform(post("/compras")
-                        .header("Authorization", "Bearer " + token)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.valor").exists());
-    }
+            mockMvc.perform(post("/compras")
+                            .header("Authorization", "Bearer " + token)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().isNotFound())
+                    .andExpect(jsonPath("$.message").value("Cartão não encontrado"));
+        }
 
-    @Test
-    void deveFalharQuandoCartaoNaoExistir() throws Exception {
-        var request = CriarCompraRequest.builder()
-                .cartaoNumero("0000000000000000")
-                .estabelecimento("Restaurante Top")
-                .valor(BigDecimal.valueOf(100))
-                .categoria(CategoriaTransacao.CASA)
-                .build();
+        @Test
+        @DisplayName("Deve retornar 422 quando limite for excedido")
+        void deveFalharQuandoLimiteForExcedido() throws Exception {
+            var request = CriarCompraRequest.builder()
+                    .cartaoNumero("1234567812345678")
+                    .estabelecimento("Compras Caras")
+                    .valor(BigDecimal.valueOf(10000))
+                    .categoria(CategoriaTransacao.OUTROS)
+                    .build();
 
-        mockMvc.perform(post("/compras")
-                        .header("Authorization", "Bearer " + token)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value("Cartão não encontrado"));
+            mockMvc.perform(post("/compras")
+                            .header("Authorization", "Bearer " + token)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().isUnprocessableEntity())
+                    .andExpect(jsonPath("$.message").value("Limite insuficiente para realizar a compra."));
+        }
+
+        @Test
+        @DisplayName("Deve retornar 403 se não houver token de autenticação")
+        void deveFalharSemToken() throws Exception {
+            var request = CriarCompraRequest.builder()
+                    .cartaoNumero("1234567812345678")
+                    .estabelecimento("Restaurante Top")
+                    .valor(BigDecimal.valueOf(150))
+                    .categoria(CategoriaTransacao.ALIMENTACAO)
+                    .build();
+
+            mockMvc.perform(post("/compras")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().isForbidden());
+        }
+
+        @Test
+        @DisplayName("Deve retornar 400 quando JSON estiver vazio")
+        void deveFalharComJsonVazio() throws Exception {
+            mockMvc.perform(post("/compras")
+                            .header("Authorization", "Bearer " + token)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content("{}"))
+                    .andExpect(status().isBadRequest());
+        }
+
+        @Test
+        @DisplayName("Deve retornar 400 quando JSON estiver malformado")
+        void deveFalharComJsonMalformado() throws Exception {
+            String jsonInvalido = "{\"cartaoNumero\": \"1234\""; // faltando fechamento
+
+            mockMvc.perform(post("/compras")
+                            .header("Authorization", "Bearer " + token)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(jsonInvalido))
+                    .andExpect(status().isBadRequest());
+        }
+
+        @Test
+        @DisplayName("Deve retornar 400 quando categoria for inválida")
+        void deveFalharComCategoriaInvalida() throws Exception {
+            String json = """
+                {
+                  "cartaoNumero": "1234567812345678",
+                  "estabelecimento": "Loja XYZ",
+                  "valor": 50.0,
+                  "categoria": "INVALIDA"
+                }
+            """;
+
+            mockMvc.perform(post("/compras")
+                            .header("Authorization", "Bearer " + token)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(json))
+                    .andExpect(status().isBadRequest());
+        }
     }
 }
-
