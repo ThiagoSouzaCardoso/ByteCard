@@ -1,11 +1,8 @@
 package com.bytecard.adapter.out.persistence.relatorio;
 
-import com.bytecard.adapter.out.persistence.relatorio.entity.GastoCategoriaView;
-import com.bytecard.adapter.out.persistence.relatorio.entity.GastoCategoriaViewId;
 import com.bytecard.adapter.out.persistence.relatorio.repository.GastoCategoriaViewRepository;
 import com.bytecard.domain.model.CategoriaTransacao;
 import com.bytecard.domain.model.GastoCategoria;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
