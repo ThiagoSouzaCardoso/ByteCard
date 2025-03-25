@@ -1,4 +1,4 @@
-package com.bytecard.config;
+package com.bytecard.domain.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

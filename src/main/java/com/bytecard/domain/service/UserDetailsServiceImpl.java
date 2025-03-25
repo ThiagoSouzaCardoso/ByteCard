@@ -1,4 +1,4 @@
-package com.bytecard.config;
+package com.bytecard.domain.service;
 
 import com.bytecard.adapter.out.persistence.cliente.entity.ClienteEntity;
 import com.bytecard.adapter.out.persistence.cliente.repository.ClienteRespository;

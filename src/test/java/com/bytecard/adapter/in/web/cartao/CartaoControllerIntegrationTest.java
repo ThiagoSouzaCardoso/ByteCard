@@ -194,6 +194,52 @@ class CartaoControllerIntegrationTest {
                 .andExpect(jsonPath("$.novoLimite").value("O limite deve ser maior que zero"));
     }
 
+    @Test
+    void deveAtivarCartaoComSucesso() throws Exception {
+        mockMvc.perform(patch("/cartoes/1234567812345678/ativar")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void deveCancelarCartaoComSucesso() throws Exception {
+        mockMvc.perform(patch("/cartoes/1234567812345678/cancelar")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void deveBloquearCartaoComSucesso() throws Exception {
+        mockMvc.perform(patch("/cartoes/1234567812345678/bloquear")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk());
+    }
+
+
+    @Test
+    void deveRetornar400ParaParametrosDePaginacaoInvalidos() throws Exception {
+        mockMvc.perform(get("/cartoes")
+                        .header("Authorization", "Bearer " + token)
+                        .param("pageNo", "-1")
+                        .param("pageSize", "0"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void naoDevePermitirAcessoSemToken() throws Exception {
+        mockMvc.perform(get("/cartoes"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void deveRetornar400QuandoFormatoDeMesAnoForInvalido() throws Exception {
+        mockMvc.perform(get("/cartoes/1234567812345678/fatura")
+                        .header("Authorization", "Bearer " + token)
+                        .param("mesAno", "12-2024")) // formato errado
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.erro").value("Formato inválido para o parâmetro 'mesAno'. Esperado: yyyy-MM"));
+    }
+
 
 
 }

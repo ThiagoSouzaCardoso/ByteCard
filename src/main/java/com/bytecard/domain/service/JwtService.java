@@ -1,5 +1,6 @@
-package com.bytecard.config;
+package com.bytecard.domain.service;
 
+import com.bytecard.domain.port.in.jwt.JwtUseCase;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -15,11 +16,12 @@ import java.util.List;
 import java.util.function.Function;
 
 @Service
-public class JwtService {
+public class JwtService implements JwtUseCase {
 
     @Value("${api.security.token.secret}")
     private String secret;
 
+    @Override
     public String generateToken(UserDetails userDetails) {
 
         List<String> roles = userDetails.getAuthorities().stream()
@@ -39,10 +41,12 @@ public class JwtService {
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
     }
 
+    @Override
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
+    @Override
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = Jwts.parser()
                 .verifyWith(getKey())
@@ -52,6 +56,7 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
+    @Override
     public boolean validateToken(String token, UserDetails userDetails) {
         try {
             final String username = extractUsername(token);
@@ -62,7 +67,7 @@ public class JwtService {
     }
 
 
-    public boolean isTokenExpired(String token) {
+    private boolean isTokenExpired(String token) {
         return extractClaim(token, Claims::getExpiration).before(new Date());
     }
 }

@@ -9,11 +9,13 @@ import com.bytecard.domain.exception.RelatorioEmptyException;
 import com.bytecard.domain.exception.UserAlreadyExistException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.time.OffsetDateTime;
 import java.util.HashMap;
@@ -95,6 +97,37 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.badRequest().body(errors);
     }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<Object> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
+        String parametro = ex.getName();
+        String formatoEsperado = FORMATOS_ESPERADOS.getOrDefault(parametro, "formato válido");
+
+        Map<String, String> body = new HashMap<>();
+        body.put("erro", "Formato inválido para o parâmetro '" + parametro + "'. Esperado: " + formatoEsperado);
+
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
+    private static final Map<String, String> FORMATOS_ESPERADOS = Map.of(
+            "mesAno", "yyyy-MM"
+    );
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<Map<String, String>> handleInvalidFormat(HttpMessageNotReadableException ex) {
+        String mensagem = "Formato inválido no corpo da requisição. Verifique os campos e tente novamente.";
+        if (ex.getMessage() != null && ex.getMessage().contains("YearMonth")) {
+            mensagem = "Formato inválido para data. Esperado: yyyy-MM (ex: 2025-03)";
+        }
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(Map.of("erro", mensagem));
+    }
+
+
+
+
 
 }
 

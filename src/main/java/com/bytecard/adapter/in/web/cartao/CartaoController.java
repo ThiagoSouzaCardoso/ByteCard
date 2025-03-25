@@ -9,6 +9,8 @@ import com.bytecard.domain.model.Cartao;
 import com.bytecard.domain.model.StatusCartao;
 import com.bytecard.domain.port.in.cartao.CartaoUseCase;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import org.springframework.data.domain.Page;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -43,11 +45,9 @@ public class CartaoController implements CartaoControllerSwagger{
         this.pagedResourcesAssembler = pagedResourcesAssembler;
     }
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasRole('GERENTE')")
+
     @Override
-    public CartaoResponse cadastrarCartao(@Valid @RequestBody CriarCartaoRequest request) {
+    public CartaoResponse cadastrarCartao(CriarCartaoRequest request) {
 
         var cartao = request.toModel();
 
@@ -55,14 +55,12 @@ public class CartaoController implements CartaoControllerSwagger{
         return cartaoHateaosAssembler.toModel(cartaoCriado);
     }
 
-    @GetMapping
-   @ResponseStatus(HttpStatus.OK)
-   @PreAuthorize("hasRole('GERENTE')")
+
    @Override
-   public PagedModel<CartaoResponse> listarCartoes(@RequestParam(defaultValue = "0") Integer pageNo,
-                                                   @RequestParam(defaultValue = "10") Integer pageSize,
-                                                   @RequestParam(required = false) String cpf,
-                                                   @RequestParam(required = false) String numero) {
+   public PagedModel<CartaoResponse> listarCartoes(Integer pageNo,
+                                                   Integer pageSize,
+                                                   String cpf,
+                                                   String numero) {
 
         Page<Cartao> cartoes = cartaoUseCase.getAllCartoes(pageNo,pageSize,cpf,numero);
 
@@ -70,46 +68,37 @@ public class CartaoController implements CartaoControllerSwagger{
 
    }
 
-    @PatchMapping("/{numero}/alterar-limite")
-    @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('GERENTE')")
+
     @Override
-    public CartaoResponse alterarLimite(@PathVariable String numero,
-                                        @Valid @RequestBody AlterarLimitRequest alterarLimitRequest) {
+    public CartaoResponse alterarLimite(String numero,
+                                        AlterarLimitRequest alterarLimitRequest) {
         return cartaoHateaosAssembler.toModel(cartaoUseCase.alterarLimit(alterarLimitRequest.novoLimite(),numero));
     }
 
-    @PatchMapping("/{numero}/ativar")
-    @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('GERENTE')")
+
     @Override
-    public CartaoResponse ativarCartao(@PathVariable String numero) {
+    public CartaoResponse ativarCartao(String numero) {
         return cartaoHateaosAssembler.toModel(cartaoUseCase.alterarStatusCartao(numero, StatusCartao.ATIVO));
     }
 
-    @PatchMapping("/{numero}/cancelar")
-    @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('GERENTE')")
+
     @Override
-    public CartaoResponse cancelarCartao(@PathVariable String numero) {
+    public CartaoResponse cancelarCartao(String numero) {
         return cartaoHateaosAssembler.toModel(cartaoUseCase.alterarStatusCartao(numero,StatusCartao.CANCELADO));
     }
 
-    @PatchMapping("/{numero}/bloquear")
-    @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('GERENTE')")
+
     @Override
-    public CartaoResponse bloquearCartao(@PathVariable String numero) {
+    public CartaoResponse bloquearCartao(String numero) {
         return cartaoHateaosAssembler.toModel(cartaoUseCase.alterarStatusCartao(numero,StatusCartao.BLOQUEADO));
     }
 
 
-    @GetMapping("/{numero}/fatura")
-    @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('GERENTE')")
+
+    @Override
     public FaturaResponse visualizarFatura(
-            @PathVariable String numero,
-            @RequestParam @DateTimeFormat(pattern = "yyyy-MM") YearMonth mesAno) {
+            String numero,
+            YearMonth mesAno) {
 
         return FaturaResponse.from(cartaoUseCase.gerarFaturaPorNumero(numero, mesAno));
     }

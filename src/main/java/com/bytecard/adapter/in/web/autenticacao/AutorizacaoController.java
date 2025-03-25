@@ -2,7 +2,7 @@ package com.bytecard.adapter.in.web.autenticacao;
 
 import com.bytecard.adapter.in.web.autenticacao.input.LoginRequest;
 import com.bytecard.adapter.in.web.autenticacao.output.TokenResponse;
-import com.bytecard.config.JwtService;
+import com.bytecard.domain.service.JwtService;
 import jakarta.validation.Valid;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

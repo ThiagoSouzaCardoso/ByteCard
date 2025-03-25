@@ -21,7 +21,7 @@ public class ClienteController implements ClienteControllerSwagger{
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     public void registerUser(@Valid @RequestBody NovoClienteRequest novoClienteRequest) {
         clienteUseCase.register(novoClienteRequest.toModel());
     }

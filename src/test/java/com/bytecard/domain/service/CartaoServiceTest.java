@@ -3,7 +3,11 @@ package com.bytecard.domain.service;
 import com.bytecard.domain.exception.CartaoNotFoundException;
 import com.bytecard.domain.exception.ClienteNotFoundException;
 import com.bytecard.domain.exception.RelatorioEmptyException;
-import com.bytecard.domain.model.*;
+import com.bytecard.domain.model.Cartao;
+import com.bytecard.domain.model.Cliente;
+import com.bytecard.domain.model.Fatura;
+import com.bytecard.domain.model.StatusCartao;
+import com.bytecard.domain.model.Transacao;
 import com.bytecard.domain.port.out.cartao.BuscaCartaoPort;
 import com.bytecard.domain.port.out.cartao.RegistraCartaoPort;
 import com.bytecard.domain.port.out.cliente.BuscaClientePort;
@@ -15,7 +19,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -24,8 +27,11 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.bytecard.domain.model.CategoriaTransacao.ALIMENTACAO;
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.when;
 
 class CartaoServiceTest {
 
@@ -194,6 +200,59 @@ class CartaoServiceTest {
         String cvv = invokePrivateCvv();
         assertThat(cvv).hasSize(3).containsOnlyDigits();
     }
+
+    @Test
+    void deveLancarExcecaoSeCartaoNaoExisteAoAlterarStatus() {
+        when(buscaCartaoPort.findByNumero("9999999999999999")).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> service.alterarStatusCartao("9999999999999999", StatusCartao.BLOQUEADO))
+                .isInstanceOf(CartaoNotFoundException.class)
+                .hasMessage("Cartão não Encontrado");
+    }
+
+    @Test
+    void deveRetornarPaginaVaziaQuandoNaoHouverCartoes() {
+        Page<Cartao> emptyPage = Page.empty();
+        when(buscaCartaoPort.findAllOrdenadosPaginados(0, 5, null, null)).thenReturn(emptyPage);
+
+        Page<Cartao> resultado = service.getAllCartoes(0, 5, null, null);
+
+        assertThat(resultado).isNotNull();
+        assertThat(resultado.getContent()).isEmpty();
+    }
+
+    @Test
+    void faturaDeveRetornarComprasOrdenadasPorData() {
+        String numero = "1234567890123456";
+        YearMonth mes = YearMonth.of(2024, 12);
+
+        Cartao cartao = Cartao.builder().numero(numero).cliente(Cliente.builder().nome("João").build()).build();
+
+        Transacao t1 = Transacao.builder()
+                .valor(BigDecimal.valueOf(50))
+                .categoria(ALIMENTACAO)
+                .estabelecimento("Padaria")
+                .data(OffsetDateTime.now().minusDays(2))
+                .build();
+
+        Transacao t2 = Transacao.builder()
+                .valor(BigDecimal.valueOf(70))
+                .categoria(ALIMENTACAO)
+                .estabelecimento("Supermercado")
+                .data(OffsetDateTime.now())
+                .build();
+
+        when(buscaCartaoPort.findByNumero(numero)).thenReturn(Optional.of(cartao));
+        when(buscaTransacaoPort.findByCartaoNumeroAndMes(eq(numero), eq(2024), eq(12)))
+                .thenReturn(List.of(t2, t1)); // fora de ordem
+
+        Fatura fatura = service.gerarFaturaPorNumero(numero, mes);
+
+        assertThat(fatura.compras()).hasSize(2);
+        assertThat(fatura.compras().get(0).getEstabelecimento()).isEqualTo("Padaria");
+        assertThat(fatura.compras().get(1).getEstabelecimento()).isEqualTo("Supermercado");
+    }
+
 
     private String invokePrivateCartaoNumber() {
         try {
