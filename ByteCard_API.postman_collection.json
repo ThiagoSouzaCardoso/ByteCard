@@ -1,0 +1,194 @@
+{
+  "info": {
+    "name": "ByteCard API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Logar com ADMIN",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"admin@bytecard.com\",\n  \"password\": \"admin\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/autorizacoes/login",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "autorizacoes",
+            "login"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.globals.set(\"auth_token\", pm.response.json().token);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Cadastrar GERENTE",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{auth_token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nome\": \"Thiago Gerente\",\n  \"email\": \"gerente@bytecard.com\",\n  \"senha\": \"admin123\",\n  \"cpf\": \"37494593802\",\n  \"papel\": \"GERENTE\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/clientes",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "clientes"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Cadastrar CLIENTE",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{auth_token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nome\": \"Thiago Cliente\",\n  \"email\": \"cliente2@bytecard.com\",\n  \"senha\": \"admin123\",\n  \"cpf\": \"15197603020\",\n  \"papel\": \"CLIENTE\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/clientes",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "clientes"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Logar com GERENTE",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"gerente@bytecard.com\",\n  \"password\": \"admin123\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/autorizacoes/login",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "autorizacoes",
+            "login"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.globals.set(\"auth_token\", pm.response.json().token);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Cadastrar CART\u00c3O",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{auth_token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"cliente2@bytecard.com\",\n  \"limite\": 1000.9\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/cartoes",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "cartoes"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.globals.set(\"numero_cartao\", pm.response.json().numero);"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "auth_token",
+      "value": ""
+    },
+    {
+      "key": "numero_cartao",
+      "value": ""
+    },
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8080"
+    }
+  ]
+}

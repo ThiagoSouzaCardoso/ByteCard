@@ -126,10 +126,6 @@ Authorization: Bearer {{auth_token}}
 
 
 ### ALTERAR LIMITE DO CARTAO
-# curl -X PATCH "http://localhost:8080/cartoes/1234567812345678/alterar-limite"
-#  -H "Content-Type: application/json"
-#  -H "Authorization: Bearer SEU_TOKEN_AQUI"
-#  -d "1000.00"
 PATCH http://localhost:8080/cartoes/{{numero_cartao}}/alterar-limite
 Authorization: Bearer {{auth_token}}
 Content-Type: application/json
