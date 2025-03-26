@@ -1,0 +1,145 @@
+### LOGAR COM ADMIN
+POST http://127.0.0.1:8080/autorizacoes/login
+Content-Type: application/json
+
+{
+  "username":"admin@bytecard.com",
+  "password": "admin"
+}
+
+> {% client.global.set("auth_token", response.body.token); %}
+
+
+### CADASTRAR UM GERENTE
+
+POST http://127.0.0.1:8080/clientes
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "nome": "Thiago Gerente",
+  "email": "gerente@bytecard.com",
+  "senha": "admin123",
+  "cpf": "37494593802",
+  "papel": "GERENTE"
+}
+
+### CADASTRAR CLIENTE
+POST http://127.0.0.1:8080/clientes
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "nome": "Thiago Cliente",
+  "email": "cliente2@bytecard.com",
+  "senha": "admin123",
+  "cpf": "15197603020",
+  "papel": "CLIENTE"
+}
+
+### LOGAR COM GERENTE
+POST http://127.0.0.1:8080/autorizacoes/login
+Content-Type: application/json
+
+{
+  "username": "gerente@bytecard.com",
+  "password": "admin123"
+}
+
+> {% client.global.set("auth_token", response.body.token); %}
+
+### CADASTRAR UM CARTAO
+
+POST http://127.0.0.1:8080/cartoes
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "email": "cliente2@bytecard.com",
+  "limite": 1000.90
+}
+
+> {% client.global.set("numero_cartao", response.body.numero); %}
+
+
+### LISTAR TODOS CARTOES
+
+GET http://127.0.0.1:8080/cartoes
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+### CANCELAR CARTAO
+PATCH http://127.0.0.1:8080/cartoes/{{numero_cartao}}/cancelar
+Authorization: Bearer {{auth_token}}
+
+### BLOQUEAR CARTÃO
+PATCH http://localhost:8080/cartoes/{{numero_cartao}}/bloquear
+Authorization: Bearer {{token}}
+
+### ATIVAR CARTAO
+PATCH http://127.0.0.1:8080/cartoes/{{numero_cartao}}/ativar
+Authorization: Bearer {{auth_token}}
+
+### REALIZAR COMPRAR NO CARTAO
+
+POST http://127.0.0.1:8080/compras
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+    "valor": 101.00,
+    "categoria": "SAUDE",
+    "estabelecimento":"Esquina do seu zé",
+    "cartaoNumero": {{numero_cartao}}
+}
+
+
+### COMPRAR ALGO COM CARTAO SEM LIMITE
+
+POST http://127.0.0.1:8080/compras
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+    "valor": 9000.00,
+    "categoria": "ALIMENTACAO",
+    "estabelecimento":"Esquina do seu zé",
+    "cartaoNumero": {{numero_cartao}}
+}
+
+
+### GERAR RELATORIO POR CATEGORIA E MES
+
+POST http://127.0.0.1:8080/relatorios
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "numeroCartao": {{numero_cartao}},
+  "mesAno": "2025-03"
+}
+
+### FATURA DO MES
+
+GET http://127.0.0.1:8080/cartoes/{{numero_cartao}}/fatura?mesAno=2025-03
+Authorization: Bearer {{auth_token}}
+
+
+### ALTERAR LIMITE DO CARTAO
+# curl -X PATCH "http://localhost:8080/cartoes/1234567812345678/alterar-limite"
+#  -H "Content-Type: application/json"
+#  -H "Authorization: Bearer SEU_TOKEN_AQUI"
+#  -d "1000.00"
+PATCH http://localhost:8080/cartoes/{{numero_cartao}}/alterar-limite
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "novoLimite": 90000.00
+}
+
+###
+
+
+
+
