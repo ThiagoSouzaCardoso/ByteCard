@@ -51,7 +51,7 @@ class ClienteControllerIntegrationTest {
 
             var request = NovoClienteRequest.builder()
                     .nome("João")
-                    .cpf("12345678900")
+                    .cpf("48191064065")
                     .email("joao@email.com")
                     .senha("senha123")
                     .papel("CLIENTE")

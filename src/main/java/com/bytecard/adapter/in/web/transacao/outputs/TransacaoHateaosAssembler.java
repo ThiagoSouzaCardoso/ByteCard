@@ -1,7 +1,7 @@
 package com.bytecard.adapter.in.web.transacao.outputs;
 
 import com.bytecard.adapter.in.web.transacao.TransacaoController;
-import com.bytecard.adapter.in.web.transacao.inputs.CriarCompraRequest;
+import com.bytecard.adapter.in.web.relatorio.inputs.CriarCompraRequest;
 import com.bytecard.domain.model.Transacao;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;

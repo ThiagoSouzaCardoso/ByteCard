@@ -13,8 +13,9 @@ public interface JwtUseCase {
 
      <T> T extractClaim(String token, Function<Claims, T> claimsResolver);
 
-    boolean validateToken(String token, UserDetails userDetails);
+   // boolean validateToken(String token, UserDetails userDetails);
 
+     boolean isTokenExpired(String token);
 
 
     }

@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
+import org.hibernate.validator.constraints.br.CPF;
 
 @Builder
 public record NovoClienteRequest(
@@ -16,6 +17,7 @@ public record NovoClienteRequest(
 
         @NotBlank(message = "CPF é obrigatório")
         @Pattern(regexp = "\\d{11}", message = "CPF deve conter exatamente 11 dígitos numéricos")
+        @CPF(message = "CPF inválido")
         String cpf,
 
         @NotBlank(message = "Email é obrigatório")

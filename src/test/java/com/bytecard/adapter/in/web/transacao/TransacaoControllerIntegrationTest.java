@@ -2,7 +2,7 @@ package com.bytecard.adapter.in.web.transacao;
 
 import com.bytecard.adapter.in.web.autenticacao.input.LoginRequest;
 import com.bytecard.adapter.in.web.autenticacao.output.TokenResponse;
-import com.bytecard.adapter.in.web.transacao.inputs.CriarCompraRequest;
+import com.bytecard.adapter.in.web.relatorio.inputs.CriarCompraRequest;
 import com.bytecard.domain.model.CategoriaTransacao;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;

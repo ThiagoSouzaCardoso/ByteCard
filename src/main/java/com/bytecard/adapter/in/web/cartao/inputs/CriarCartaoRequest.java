@@ -3,6 +3,7 @@ package com.bytecard.adapter.in.web.cartao.inputs;
 import com.bytecard.domain.model.Cartao;
 import com.bytecard.domain.model.Cliente;
 import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
@@ -15,6 +16,7 @@ public record CriarCartaoRequest(
         BigDecimal limite,
 
         @NotEmpty(message = "Cliente é obrigatório")
+        @Email(message = "Formato de email inválido")
         String  email
 ) {
 

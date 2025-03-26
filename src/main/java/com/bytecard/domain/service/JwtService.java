@@ -11,6 +11,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 import java.util.function.Function;
@@ -28,17 +30,16 @@ public class JwtService implements JwtUseCase {
                 .map(GrantedAuthority::getAuthority)
                 .toList();
 
+        Instant now = Instant.now();
+        Instant expiration = now.plus(10, ChronoUnit.MINUTES);
+
         return Jwts.builder()
                 .subject(userDetails.getUsername())
                 .claim("roles", roles)
-                .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
+                .issuedAt(Date.from(expiration))
+                .expiration(Date.from(expiration))
                 .signWith(getKey())
                 .compact();
-    }
-
-    private SecretKey getKey() {
-        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
     }
 
     @Override
@@ -57,18 +58,13 @@ public class JwtService implements JwtUseCase {
     }
 
     @Override
-    public boolean validateToken(String token, UserDetails userDetails) {
-        try {
-            final String username = extractUsername(token);
-            return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
-        } catch (Exception e) {
-            return false;
-        }
+    public boolean isTokenExpired(String token) {
+        return extractClaim(token, Claims::getExpiration).before(Date.from(Instant.now()));
     }
 
-
-    private boolean isTokenExpired(String token) {
-        return extractClaim(token, Claims::getExpiration).before(new Date());
+    private SecretKey getKey() {
+        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
     }
+
 }
 

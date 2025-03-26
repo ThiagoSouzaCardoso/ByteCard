@@ -184,5 +184,18 @@ class GlobalExceptionHandlerTest {
             assertThat(response.getStatusCode().value()).isEqualTo(400);
             assertThat(response.getBody()).containsEntry("erro", "Formato inválido no corpo da requisição. Verifique os campos e tente novamente.");
         }
+
+        @Test
+        @DisplayName("Deve retornar mensagem padrão quando ex.getMessage() é null")
+        void deveTratarMensagemNulaNaExcecao() {
+            HttpMessageNotReadableException exception = mock(HttpMessageNotReadableException.class);
+            when(exception.getMessage()).thenReturn(null);
+
+            ResponseEntity<Map<String, String>> response = handler.handleInvalidFormat(exception);
+
+            assertThat(response.getStatusCode().value()).isEqualTo(400);
+            assertThat(response.getBody()).containsEntry("erro", "Formato inválido no corpo da requisição. Verifique os campos e tente novamente.");
+        }
+
     }
 }
