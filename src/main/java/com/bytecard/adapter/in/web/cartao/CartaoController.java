@@ -9,28 +9,16 @@ import com.bytecard.domain.model.Cartao;
 import com.bytecard.domain.model.StatusCartao;
 import com.bytecard.domain.port.in.cartao.CartaoUseCase;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.PositiveOrZero;
 import org.springframework.data.domain.Page;
 import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.hateoas.PagedModel;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.YearMonth;
 
 @RestController
-@RequestMapping("/cartoes")
+@PreAuthorize("hasRole('GERENTE')")
 public class CartaoController implements CartaoControllerSwagger{
 
     private final CartaoUseCase cartaoUseCase;
@@ -71,7 +59,7 @@ public class CartaoController implements CartaoControllerSwagger{
 
     @Override
     public CartaoResponse alterarLimite(String numero,
-                                        AlterarLimitRequest alterarLimitRequest) {
+                                       @Valid AlterarLimitRequest alterarLimitRequest) {
         return cartaoHateaosAssembler.toModel(cartaoUseCase.alterarLimit(alterarLimitRequest.novoLimite(),numero));
     }
 
@@ -92,8 +80,6 @@ public class CartaoController implements CartaoControllerSwagger{
     public CartaoResponse bloquearCartao(String numero) {
         return cartaoHateaosAssembler.toModel(cartaoUseCase.alterarStatusCartao(numero,StatusCartao.BLOQUEADO));
     }
-
-
 
     @Override
     public FaturaResponse visualizarFatura(

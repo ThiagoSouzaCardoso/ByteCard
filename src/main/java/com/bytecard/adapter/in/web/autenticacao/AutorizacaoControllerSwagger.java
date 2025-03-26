@@ -32,6 +32,6 @@ public interface AutorizacaoControllerSwagger {
                     )
             }
     )
-    TokenResponse login(@org.springframework.web.bind.annotation.RequestBody LoginRequest loginRequest);
+    TokenResponse login(LoginRequest loginRequest);
 }
 
