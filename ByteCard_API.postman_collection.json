@@ -175,6 +175,241 @@
           }
         }
       ]
+    },
+    {
+      "name": "Listar TODOS os Cart\u00f5es",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{auth_token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/cartoes",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "cartoes"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Ativar Cart\u00e3o",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{auth_token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/cartoes/{{numero_cartao}}/ativar",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "cartoes",
+            "{{numero_cartao}}",
+            "ativar"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Bloquear Cart\u00e3o",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{auth_token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/cartoes/{{numero_cartao}}/bloquear",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "cartoes",
+            "{{numero_cartao}}",
+            "bloquear"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Cancelar Cart\u00e3o",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{auth_token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/cartoes/{{numero_cartao}}/cancelar",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "cartoes",
+            "{{numero_cartao}}",
+            "cancelar"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Alterar Limite do Cart\u00e3o",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{auth_token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/cartoes/{{numero_cartao}}/alterar-limite",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "cartoes",
+            "{{numero_cartao}}",
+            "alterar-limite"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"novoLimite\": 90000.0\n}"
+        }
+      }
+    },
+    {
+      "name": "Realizar Compra no Cart\u00e3o",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{auth_token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/compras",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "compras"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"valor\": 101.0,\n  \"categoria\": \"SAUDE\",\n  \"estabelecimento\": \"Esquina do seu z\\u00e9\",\n  \"cartaoNumero\": \"{{numero_cartao}}\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Compra sem Limite",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{auth_token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/compras",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "compras"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"valor\": 9000.0,\n  \"categoria\": \"ALIMENTACAO\",\n  \"estabelecimento\": \"Esquina do seu z\\u00e9\",\n  \"cartaoNumero\": \"{{numero_cartao}}\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Relat\u00f3rio por Categoria e M\u00eas",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{auth_token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/relatorios",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "relatorios"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"numeroCartao\": \"{{numero_cartao}}\",\n  \"mesAno\": \"2025-03\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Fatura do Cart\u00e3o por M\u00eas",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{auth_token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/cartoes/{{numero_cartao}}/fatura?mesAno=2025-03",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "cartoes",
+            "{{numero_cartao}}",
+            "fatura"
+          ]
+        }
+      }
     }
   ],
   "variable": [
