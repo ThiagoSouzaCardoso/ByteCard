@@ -212,9 +212,20 @@ class CartaoControllerIntegrationTest {
 
     @Nested
     @DisplayName("Status do Cartão")
+    @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
     class StatusCartao {
 
         @Test
+        @Order(1)
+        @DisplayName("Deve bloquear cartão com sucesso")
+        void deveBloquearCartaoComSucesso() throws Exception {
+            mockMvc.perform(patch("/cartoes/1234567812345678/bloquear")
+                            .header("Authorization", "Bearer " + token))
+                    .andExpect(status().isOk());
+        }
+
+        @Test
+        @Order(2)
         @DisplayName("Deve ativar cartão com sucesso")
         void deveAtivarCartaoComSucesso() throws Exception {
             mockMvc.perform(patch("/cartoes/1234567812345678/ativar")
@@ -223,6 +234,7 @@ class CartaoControllerIntegrationTest {
         }
 
         @Test
+        @Order(3)
         @DisplayName("Deve cancelar cartão com sucesso")
         void deveCancelarCartaoComSucesso() throws Exception {
             mockMvc.perform(patch("/cartoes/1234567812345678/cancelar")
@@ -231,12 +243,14 @@ class CartaoControllerIntegrationTest {
         }
 
         @Test
-        @DisplayName("Deve bloquear cartão com sucesso")
-        void deveBloquearCartaoComSucesso() throws Exception {
-            mockMvc.perform(patch("/cartoes/1234567812345678/bloquear")
+        @Order(4)
+        @DisplayName("Deve dar erro ao tentar ativar um  cartão concelado")
+        void deveDarErroAoTentarAtivarUmCartãoConcelado() throws Exception {
+            mockMvc.perform(patch("/cartoes/1234567812345678/cancelar")
                             .header("Authorization", "Bearer " + token))
-                    .andExpect(status().isOk());
+                    .andExpect(status().isUnprocessableEntity());
         }
+
     }
 
     @Nested

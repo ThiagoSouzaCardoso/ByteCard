@@ -10,3 +10,13 @@ VALUES
     (55.75, 'OUTROS', 'Compras diversas', 1);
 
 
+-- Inserindo transações associadas ao cartão com ID 1
+INSERT INTO transacao_entity (valor, categoria, estabelecimento, cartao_id)
+VALUES
+    (120.00, 'ALIMENTACAO', 'Restaurante Sabor & Arte', 2),
+    (89.90, 'SAUDE', 'Farmácia DrogaMais', 2),
+    (45.50, 'LAZER', 'Streaming Netflix', 2),
+    (220.00, 'CASA', 'Loja de Construção ABC', 2),
+    (15.00, 'TRANSPORTE', 'Uber', 2),
+    (300.00, 'EDUCACAO', 'Curso Online de Java', 2),
+    (55.75, 'OUTROS', 'Compras diversas', 2);

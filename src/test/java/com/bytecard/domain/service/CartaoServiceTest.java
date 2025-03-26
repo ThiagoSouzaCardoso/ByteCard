@@ -64,7 +64,7 @@ class CartaoServiceTest {
         assertThat(registrado).isNotNull();
         assertThat(registrado.getNumero()).hasSize(16);
         assertThat(registrado.getCvv()).hasSize(3);
-        assertThat(registrado.getStatus()).isEqualTo(StatusCartao.ATIVO);
+        assertThat(registrado.getStatus()).isEqualTo(StatusCartao.BLOQUEADO);
         assertThat(registrado.getCliente()).isEqualTo(cliente);
     }
 
@@ -207,7 +207,7 @@ class CartaoServiceTest {
 
         assertThatThrownBy(() -> service.alterarStatusCartao("9999999999999999", StatusCartao.BLOQUEADO))
                 .isInstanceOf(CartaoNotFoundException.class)
-                .hasMessage("Cartão não Encontrado");
+                .hasMessage("Cartão não encontrado");
     }
 
     @Test

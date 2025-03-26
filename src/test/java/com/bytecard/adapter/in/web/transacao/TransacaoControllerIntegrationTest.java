@@ -58,7 +58,7 @@ class TransacaoControllerIntegrationTest {
         @DisplayName("Deve registrar compra com sucesso")
         void deveRegistrarCompraComSucesso() throws Exception {
             var request = CriarCompraRequest.builder()
-                    .cartaoNumero("1234567812345678")
+                    .cartaoNumero("1234567812345679")
                     .estabelecimento("Restaurante Top")
                     .valor(BigDecimal.valueOf(150))
                     .categoria(CategoriaTransacao.ALIMENTACAO)
@@ -78,7 +78,7 @@ class TransacaoControllerIntegrationTest {
         @DisplayName("Deve retornar 400 quando estabelecimento for muito curto")
         void deveFalharQuandoEstabelecimentoForMuitoCurto() throws Exception {
             var request = CriarCompraRequest.builder()
-                    .cartaoNumero("1234567812345678")
+                    .cartaoNumero("1234567812345679")
                     .estabelecimento("abc")
                     .valor(BigDecimal.valueOf(100))
                     .categoria(CategoriaTransacao.SAUDE)
@@ -96,7 +96,7 @@ class TransacaoControllerIntegrationTest {
         @DisplayName("Deve retornar 400 quando valor for negativo")
         void deveFalharQuandoValorForNegativo() throws Exception {
             var request = CriarCompraRequest.builder()
-                    .cartaoNumero("1234567812345678")
+                    .cartaoNumero("1234567812345679")
                     .estabelecimento("Restaurante Top")
                     .valor(BigDecimal.valueOf(-100))
                     .categoria(CategoriaTransacao.OUTROS)
@@ -132,7 +132,7 @@ class TransacaoControllerIntegrationTest {
         @DisplayName("Deve retornar 422 quando limite for excedido")
         void deveFalharQuandoLimiteForExcedido() throws Exception {
             var request = CriarCompraRequest.builder()
-                    .cartaoNumero("1234567812345678")
+                    .cartaoNumero("1234567812345679")
                     .estabelecimento("Compras Caras")
                     .valor(BigDecimal.valueOf(10000))
                     .categoria(CategoriaTransacao.OUTROS)
@@ -150,7 +150,7 @@ class TransacaoControllerIntegrationTest {
         @DisplayName("Deve retornar 403 se não houver token de autenticação")
         void deveFalharSemToken() throws Exception {
             var request = CriarCompraRequest.builder()
-                    .cartaoNumero("1234567812345678")
+                    .cartaoNumero("1234567812345679")
                     .estabelecimento("Restaurante Top")
                     .valor(BigDecimal.valueOf(150))
                     .categoria(CategoriaTransacao.ALIMENTACAO)

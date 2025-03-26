@@ -4,6 +4,7 @@ import com.bytecard.adapter.in.web.cartao.outputs.CompraItemResponse;
 import com.bytecard.domain.exception.CartaoNotFoundException;
 import com.bytecard.domain.exception.ClienteNotFoundException;
 import com.bytecard.domain.exception.RelatorioEmptyException;
+import com.bytecard.domain.exception.StatusAlterationNotAllowedException;
 import com.bytecard.domain.model.Cartao;
 import com.bytecard.domain.model.Fatura;
 import com.bytecard.domain.model.StatusCartao;
@@ -53,7 +54,7 @@ public class CartaoService implements CartaoUseCase {
                 .cvv(gerarCVV())
                 .numero(gerarNumeroCartao())
                 .validade(YearMonth.now().plusYears(4).plusMonths(6))
-                .status(StatusCartao.ATIVO)
+                .status(StatusCartao.BLOQUEADO)
                 .limite(cartao.getLimite())
                 .limiteUtilizado(BigDecimal.ZERO)
                 .cliente(cliente.get())
@@ -84,10 +85,16 @@ public class CartaoService implements CartaoUseCase {
     @Override
     public Cartao alterarStatusCartao(String numeroCartao, StatusCartao status) {
         var cartao = buscaCartaoPort.findByNumero(numeroCartao);
-        if(cartao.isEmpty()){
-            throw new CartaoNotFoundException("Cartão não Encontrado");
+        if (cartao.isEmpty()) {
+            throw new CartaoNotFoundException("Cartão não encontrado");
         }
+
         Cartao cartaoEncontrado = cartao.get();
+
+        if (cartaoEncontrado.getStatus() == StatusCartao.CANCELADO) {
+            throw new StatusAlterationNotAllowedException("Não é possível alterar o status de um cartão cancelado");
+        }
+
         cartaoEncontrado.setStatus(status);
         return registraCartaoPort.save(cartaoEncontrado);
     }

@@ -6,6 +6,7 @@ import com.bytecard.domain.exception.CartaoNotFoundException;
 import com.bytecard.domain.exception.ClienteNotFoundException;
 import com.bytecard.domain.exception.LimiteExcedidoException;
 import com.bytecard.domain.exception.RelatorioEmptyException;
+import com.bytecard.domain.exception.StatusAlterationNotAllowedException;
 import com.bytecard.domain.exception.UserAlreadyExistException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -107,6 +108,12 @@ public class GlobalExceptionHandler {
         body.put("erro", "Formato inválido para o parâmetro '" + parametro + "'. Esperado: " + formatoEsperado);
 
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(StatusAlterationNotAllowedException.class)
+    public ResponseEntity<Map<String, Object>> handleForbidden(StatusAlterationNotAllowedException ex) {
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
+                .body(buildErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage(), "Alteração não permitida "));
     }
 
     private static final Map<String, String> FORMATOS_ESPERADOS = Map.of(
