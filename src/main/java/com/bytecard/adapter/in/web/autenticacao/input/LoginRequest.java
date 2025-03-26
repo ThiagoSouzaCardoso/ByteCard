@@ -4,14 +4,18 @@ import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
+import io.swagger.v3.oas.annotations.media.Schema;
 
+
+@Schema(name = "LoginRequest", description = "Credenciais de login do usuário")
 @Builder
 public record LoginRequest(
-        @Parameter(description = "Usuário (email ou login)", required = true, example = "usuario@usuario.com")
+
+        @Schema(description = "E-mail do usuário", example = "usuario@usuario.com")
         @NotBlank(message = "O campo 'username' é obrigatório")
         @Email(message = "Formato de email inválido")
         String username,
 
-        @Parameter(description = "Senha do usuário", required = true, example = "senhaUsuario")
+        @Schema(description = "Senha do usuário", example = "senhaSegura123")
         @NotBlank(message = "O campo 'password' é obrigatório") String password
 ) {}
