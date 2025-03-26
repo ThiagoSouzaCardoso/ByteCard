@@ -5,6 +5,7 @@ import com.bytecard.adapter.in.web.transacao.outputs.GastoPorCategoriaResponse;
 import com.bytecard.adapter.in.web.transacao.outputs.RelatorioGastosResponse;
 import com.bytecard.domain.port.in.relatorio.RelatorioUseCase;
 import jakarta.validation.Valid;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/relatorios")
+@PreAuthorize("hasRole('GERENTE')")
 public class RelatorioController implements RelatorioControllerSwagger {
 
     private final RelatorioUseCase relatorioUseCase;

@@ -7,6 +7,7 @@ import com.bytecard.domain.model.Transacao;
 import com.bytecard.domain.port.in.transacao.TransacaoUseCase;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/compras")
+@PreAuthorize("hasRole('GERENTE')")
 public class TransacaoController implements TransacaoControllerSwagger {
 
     private final TransacaoHateaosAssembler transacaoHateaosAssembler;

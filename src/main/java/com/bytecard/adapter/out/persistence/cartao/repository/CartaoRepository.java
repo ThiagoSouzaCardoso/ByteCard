@@ -17,13 +17,21 @@ public interface CartaoRepository extends JpaRepository<CartaoEntity, Long> {
     @Query("SELECT c FROM CartaoEntity c JOIN c.cliente cli ORDER BY cli.nome ASC, c.numero ASC")
     List<CartaoEntity> findAllOrdered();
 
-    @Query("""
-    SELECT c FROM CartaoEntity c
-    JOIN c.cliente cli
-    WHERE (:cpf IS NULL OR cli.cpf = :cpf)
-      AND (:numero IS NULL OR c.numero LIKE %:numero%)
-    ORDER BY cli.nome ASC, c.numero ASC
-""")
+    @Query(
+            value = """
+        SELECT c FROM CartaoEntity c
+        JOIN c.cliente cli
+        WHERE (:cpf IS NULL OR cli.cpf = :cpf)
+          AND (:numero IS NULL OR c.numero LIKE %:numero%)
+        ORDER BY cli.nome ASC, c.numero ASC
+    """,
+            countQuery = """
+        SELECT COUNT(c) FROM CartaoEntity c
+        JOIN c.cliente cli
+        WHERE (:cpf IS NULL OR cli.cpf = :cpf)
+          AND (:numero IS NULL OR c.numero LIKE %:numero%)
+    """
+    )
     Page<CartaoEntity> findAllOrdered(
             @Param("cpf") String cpf,
             @Param("numero") String numero,
