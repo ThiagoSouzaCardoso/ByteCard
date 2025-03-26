@@ -47,10 +47,10 @@ public interface CartaoControllerSwagger {
     )
     PagedModel<CartaoResponse> listarCartoes(
             @Parameter(description = "Número da página (começando em 0)", example = "0")
-            @RequestParam(defaultValue = "0") @PositiveOrZero Integer pageNo,
+            @RequestParam(defaultValue = "0") @PositiveOrZero Integer pagina,
 
             @Parameter(description = "Quantidade de registros por página", example = "10")
-            @RequestParam(defaultValue = "10") @Positive Integer pageSize,
+            @RequestParam(defaultValue = "10") @Positive Integer tamanhoPagina,
 
             @Parameter(description = "CPF do cliente para filtrar", example = "12345678900")
             @RequestParam(required = false) String cpf,

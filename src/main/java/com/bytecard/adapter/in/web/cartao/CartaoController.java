@@ -45,12 +45,12 @@ public class CartaoController implements CartaoControllerSwagger{
 
 
    @Override
-   public PagedModel<CartaoResponse> listarCartoes(Integer pageNo,
-                                                   Integer pageSize,
+   public PagedModel<CartaoResponse> listarCartoes(Integer pagina,
+                                                   Integer tamanhoPagina,
                                                    String cpf,
                                                    String numero) {
 
-        Page<Cartao> cartoes = cartaoUseCase.getAllCartoes(pageNo,pageSize,cpf,numero);
+        Page<Cartao> cartoes = cartaoUseCase.getAllCartoes(pagina,tamanhoPagina,cpf,numero);
 
        return pagedResourcesAssembler.toModel(cartoes, cartaoHateaosAssembler);
 
