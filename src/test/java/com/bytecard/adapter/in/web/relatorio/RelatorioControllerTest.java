@@ -1,7 +1,6 @@
 package com.bytecard.adapter.in.web.relatorio;
 
-import com.bytecard.adapter.in.web.transacao.inputs.RelatorioGastosRequest;
-import com.bytecard.adapter.in.web.transacao.outputs.RelatorioGastosResponse;
+import com.bytecard.adapter.in.web.relatorio.inputs.RelatorioGastosRequest;
 import com.bytecard.domain.exception.CartaoNotFoundException;
 import com.bytecard.domain.exception.RelatorioEmptyException;
 import com.bytecard.domain.model.GastoCategoria;

@@ -26,6 +26,7 @@ public class SwaggerConfig {
                         .addSecuritySchemes("Bearer Token",
                                 new SecurityScheme()
                                         .name("Bearer Token")
+                                        .description("JWT via header Authorization. Ex: Bearer eyJhbGciOi...")
                                         .type(SecurityScheme.Type.HTTP)
                                         .scheme("bearer")
                                         .bearerFormat("JWT")));

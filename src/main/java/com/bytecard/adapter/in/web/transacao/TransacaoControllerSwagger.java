@@ -1,6 +1,6 @@
 package com.bytecard.adapter.in.web.transacao;
 
-import com.bytecard.adapter.in.web.relatorio.inputs.CriarCompraRequest;
+import com.bytecard.adapter.in.web.transacao.inputs.CriarCompraRequest;
 import com.bytecard.adapter.in.web.transacao.outputs.TransacaoResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

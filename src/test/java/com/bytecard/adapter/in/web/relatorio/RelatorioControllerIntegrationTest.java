@@ -2,7 +2,7 @@ package com.bytecard.adapter.in.web.relatorio;
 
 import com.bytecard.adapter.in.web.autenticacao.input.LoginRequest;
 import com.bytecard.adapter.in.web.autenticacao.output.TokenResponse;
-import com.bytecard.adapter.in.web.transacao.inputs.RelatorioGastosRequest;
+import com.bytecard.adapter.in.web.relatorio.inputs.RelatorioGastosRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

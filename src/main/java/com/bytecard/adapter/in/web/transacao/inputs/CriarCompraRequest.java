@@ -1,4 +1,4 @@
-package com.bytecard.adapter.in.web.relatorio.inputs;
+package com.bytecard.adapter.in.web.transacao.inputs;
 
 import com.bytecard.domain.model.Cartao;
 import com.bytecard.domain.model.CategoriaTransacao;

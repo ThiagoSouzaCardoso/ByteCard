@@ -1,6 +1,6 @@
 package com.bytecard.adapter.in.web.relatorio;
 
-import com.bytecard.adapter.in.web.transacao.inputs.RelatorioGastosRequest;
+import com.bytecard.adapter.in.web.relatorio.inputs.RelatorioGastosRequest;
 import com.bytecard.adapter.in.web.transacao.outputs.GastoPorCategoriaResponse;
 import com.bytecard.adapter.in.web.transacao.outputs.RelatorioGastosResponse;
 import com.bytecard.domain.port.in.relatorio.RelatorioUseCase;
