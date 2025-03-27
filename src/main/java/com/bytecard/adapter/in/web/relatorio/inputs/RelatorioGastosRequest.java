@@ -1,10 +1,10 @@
 package com.bytecard.adapter.in.web.relatorio.inputs;
 
 import com.bytecard.domain.model.CriarRelatorio;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
-import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.YearMonth;
 

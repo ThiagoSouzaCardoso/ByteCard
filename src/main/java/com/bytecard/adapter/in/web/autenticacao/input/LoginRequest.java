@@ -1,10 +1,9 @@
 package com.bytecard.adapter.in.web.autenticacao.input;
 
-import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
-import io.swagger.v3.oas.annotations.media.Schema;
 
 
 @Schema(name = "LoginRequest", description = "Credenciais de login do usuário")

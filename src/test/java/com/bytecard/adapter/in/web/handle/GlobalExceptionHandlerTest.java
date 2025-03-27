@@ -1,6 +1,12 @@
 package com.bytecard.adapter.in.web.handle;
 
-import com.bytecard.domain.exception.*;
+import com.bytecard.domain.exception.CartaoBloqueadoException;
+import com.bytecard.domain.exception.CartaoCanceladoException;
+import com.bytecard.domain.exception.CartaoNotFoundException;
+import com.bytecard.domain.exception.ClienteNotFoundException;
+import com.bytecard.domain.exception.LimiteExcedidoException;
+import com.bytecard.domain.exception.RelatorioEmptyException;
+import com.bytecard.domain.exception.UserAlreadyExistException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -18,7 +24,8 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @DisplayName("GlobalExceptionHandler")
 class GlobalExceptionHandlerTest {

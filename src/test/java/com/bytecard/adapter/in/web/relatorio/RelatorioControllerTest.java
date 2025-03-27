@@ -18,10 +18,17 @@ import java.math.BigDecimal;
 import java.time.YearMonth;
 import java.util.List;
 
-import static com.bytecard.domain.model.CategoriaTransacao.*;
+import static com.bytecard.domain.model.CategoriaTransacao.ALIMENTACAO;
+import static com.bytecard.domain.model.CategoriaTransacao.CASA;
+import static com.bytecard.domain.model.CategoriaTransacao.EDUCACAO;
+import static com.bytecard.domain.model.CategoriaTransacao.SAUDE;
+import static com.bytecard.domain.model.CategoriaTransacao.TRANSPORTE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.argThat;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("RelatorioController - Unit")
