@@ -262,8 +262,8 @@ class CartaoControllerIntegrationTest {
         void deveRetornar400ParaParametrosDePaginacaoInvalidos() throws Exception {
             mockMvc.perform(get("/cartoes")
                             .header("Authorization", "Bearer " + token)
-                            .param("pageNo", "-1")
-                            .param("pageSize", "0"))
+                            .param("pagina", "-1")
+                            .param("tamanhoPagina", "0"))
                     .andExpect(status().isBadRequest());
         }
 
