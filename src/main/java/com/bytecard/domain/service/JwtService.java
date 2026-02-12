@@ -36,7 +36,7 @@ public class JwtService implements JwtUseCase {
         return Jwts.builder()
                 .subject(userDetails.getUsername())
                 .claim("roles", roles)
-                .issuedAt(Date.from(expiration))
+                .issuedAt(Date.from(now))
                 .expiration(Date.from(expiration))
                 .signWith(getKey())
                 .compact();
